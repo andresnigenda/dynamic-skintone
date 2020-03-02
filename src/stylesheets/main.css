@@ -23,7 +23,7 @@ figure {
   position: -webkit-sticky;
   position: sticky;
   width: 100%;
-  /*margin: 0;*/
+  margin: 0;
   top: 0;
   -webkit-transform: translate3d(0, 0, 0);
   -moz-transform: translate3d(0, 0, 0);
