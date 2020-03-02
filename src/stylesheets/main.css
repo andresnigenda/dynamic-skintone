@@ -28,7 +28,6 @@ figure {
   -webkit-transform: translate3d(0, 0, 0);
   -moz-transform: translate3d(0, 0, 0);
   transform: translate3d(0, 0, 0);
-  background-color: #8a8a8a;
   z-index: 0;
 }
 
@@ -75,4 +74,10 @@ figure p {
   text-align: center;
   padding: 1rem;
   font-size: 1.5rem;
+}
+
+.xLabel,
+.yLabel {
+    font-size: 12px;
+    color: #000000;
 }

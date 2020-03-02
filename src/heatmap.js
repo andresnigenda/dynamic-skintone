@@ -5,13 +5,11 @@ export default function heatMapAll(data, response) {
     const containerStart = d3.select("#chart").node().getBoundingClientRect();
     const width = containerStart.width;
     const height = containerStart.height;
-    const margin = {top: 10, right: 10, bottom: 10, left: 10};
+    const margin = {top: 10, right: 0, bottom: 0, left: 0};
     const plotWidth = width - margin.left - margin.right;
     const plotHeight = height - margin.top - margin.bottom;
-
+    
     var svg = d3.select("#chart").select("svg");
-
-    const duration = 1000;
 
     // work with data
     var educLabelsD = {"1": "No Schooling", 
@@ -35,42 +33,37 @@ export default function heatMapAll(data, response) {
 
     // scales
     var xScale = d3.scaleBand()
-      .range([ 0, plotWidth])
+      .range([0, plotWidth])
       .domain(educLabels)
       .padding(0.01);
+    
     var yScale = d3.scaleBand()
-      .range([ height, 0 ])
+      .range([plotHeight, 0 ])
       .domain(educLabels)
       .padding(0.01);
+    
     var myColor = d3.scaleLinear()
       .range(["white", "#69b3a2"])
       .domain([1, 380000]); // add max function!
     
 
-    // axis, labels PENDING
-    console.log(height);
+    // x axis
     svg.select(".xAxis")
-        .attr("transform", "translate(0," + height + ")")
-        .call(d3.axisBottom(xScale))
-        .selectAll("text")
-        .attr("dx", "1em")
-        .attr("dy", "-0.5em")
-        .style("text-anchor", "start")
-        .attr("transform", "rotate(90)");
+      .attr("transform", "translate(0," + plotHeight + ")")
+      .call(d3.axisBottom(xScale))
+      .selectAll("text")
+      .attr("dx", "1em")
+      .attr("dy", "-0.5em")
+      .style("text-anchor", "start")
+      .attr("transform", "rotate(90)");
+
     
-    svg.append("text")
-        .attr("transform",
-              "translate(" + (width) + " ," + 
-                             (height + margin.top + 115) + ")")
-        .style("text-anchor", "middle")
-        .text("Highest Degree Earned")
-        .attr("font-size", "12px");
-    
-    svg.select(".yaxis")
+    svg.select(".yAxis")
         .call(d3.axisLeft(yScale));
 
     // plot
-    svg.selectAll()
+    var myGraph = svg.select("#myGraph")
+        .selectAll()
         .data(processedData, function(d) {return d.NivEsc_Inf + ":" + d.NivEsc_PP;})
         .enter()
         .append("rect")

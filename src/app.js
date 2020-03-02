@@ -58,7 +58,6 @@ function handleStepEnter(response) {
   // response = { element, direction, index }
 
   // add color to current step only
-  step.classed('is-active', false);
   step.classed("is-active", function(d, i) {
     return i === response.index;
   });
@@ -92,8 +91,6 @@ function init() {
   scroller
     .setup({
       step: "#scrolly article .step",
-      graphic: "figure",
-      text: "#scrolly",
       offset: 0.33,
       debug: true,
     })

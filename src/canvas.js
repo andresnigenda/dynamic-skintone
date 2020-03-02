@@ -1,4 +1,4 @@
-// setup initial svg canvas for transitions
+// setup initial svg canvas
 import * as d3 from 'd3';
 
 export default function canvas() {
@@ -6,18 +6,18 @@ export default function canvas() {
 
     // container dimensions
     const containerStart = d3.select("#chart").node().getBoundingClientRect();
-    const width = containerStart.width;
-    const height = containerStart.height;
-    const margin = {top: 30, right: 30, bottom: 150, left: 150};
-
-    const plotWidth = width - margin.left - margin.right;
-    const plotHeight = height - margin.top - margin.bottom;
-
+    //const width = containerStart.width;
+    //const height = containerStart.height;
+    //const margin = {top: 10, right: 30, bottom: 30, left: 30};
+    var margin = {top: 30, right: 30, bottom: 150, left: 150};
+    var width = 750 - margin.left - margin.right;
+    var height = 750 - margin.top - margin.bottom;
+    console.log(width);
     // append svg object to the body of the page
     d3.select("#chart")
         .append("svg")
-        .attr("width", width)
-        .attr("height", height);
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom);
 
     var svg = d3.select("#chart").select("svg");
 
@@ -28,24 +28,10 @@ export default function canvas() {
     // y-axis
     svg.append("g")
         .attr("class", "yAxis");
-    
 
-    // append labels CHANGE THIS
-    /*svg.selectAll(".xLabel")
-        .data([{"label": ""}])
-        .enter()
-        .append("text")
-        .attr("class", "xLabel")
-        .attr("transform", "translate(0," + height + ")")
-        .text(d => d.label)
-        .attr("text-anchor", "middle")
-        .attr("x", (0.5 * (plotWidth + margin.left)))
-        .attr("y", margin.top - 25); */
-
-    // append plot
-
+    // graph
     svg.append("g")
-        .attr("id", "plot");
+        .attr("id", "myGraph");
     
 
 
