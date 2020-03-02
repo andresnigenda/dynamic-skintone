@@ -1,23 +1,123 @@
-// if the data you are going to import is small, then you can import it using es6 import
-// import MY_DATA from './app/data/example.json'
-// (I tend to think it's best to use screaming snake case for imported json)
-const domReady = require('domready');
+/**
+ * Skin Tone and Social Mobility in Mexico
+ * Andres Nigenda
+ * 
+ * Scrollytelling implementation with scrollama
+ */
 
-domReady(() => {
-  // this is just one example of how to import data. there are lots of ways to do it!
-  fetch('./data/example.json')
-    .then(response => response.json())
-    .then(data => myVis(data))
-    .catch(e => {
-      console.log(e);
-    });
-});
+import "intersection-observer";
+import scrollama from "scrollama";
+import * as d3 from 'd3';
+import './stylesheets/main.css';
+import heatMapAll from './heatmap';
+import canvas from "./canvas";
 
-function myVis(data) {
-  // portrait
-  const width = 5000;
-  const height = (36 / 24) * width;
-  console.log(data, height);
-  console.log('Hi!');
-  // EXAMPLE FIRST FUNCTION
+
+// set up
+var scrolly = d3.select("#scrolly");
+var figure = scrolly.select("figure");
+var chart = scrolly.select("#chart")
+var article = scrolly.select("article");
+var step = article.selectAll(".step");
+let dataContainer = [];
+
+// initialize the scrollama
+var scroller = scrollama();
+
+// generic window resize listener event
+function handleResize() {
+  // 1. update height of step elements
+  var stepH = Math.floor(window.innerHeight * 0.8);
+  step.style("height", stepH + "px");
+
+  // 2. update figure measures
+  var figureH = window.innerHeight / 1.2;
+  var figureMarginTop = (window.innerHeight - figureH) / 2;
+
+  figure
+    .style("height", figureH + "px")
+    .style("top", figureMarginTop + "px");
+  
+  // 3. update graph measures
+  console.log(figureH)
+  var chartH = 600;
+  var chartW = 600;
+
+  chart
+      .style("height", chartH + "px")
+      .style("width", chartW + "px");
+
+  // 4. tell scrollama to update new element dimensions
+  scroller.resize();
 }
+
+// scrollama event handlers
+function handleStepEnter(response) {
+  console.log(response);
+  console.log(dataContainer.mainData);
+  // response = { element, direction, index }
+
+  // add color to current step only
+  step.classed('is-active', false);
+  step.classed("is-active", function(d, i) {
+    return i === response.index;
+  });
+
+  // update graphic based on step
+  if(response.index === 0) {
+    heatMapAll(dataContainer.mainData, response);
+  } else if (response.index === 1) {
+    figure.select("p").text("meow");
+  } else {
+    figure.select("p").text("2");
+  }
+  handleResize();
+}
+
+function setupStickyfill() {
+  d3.selectAll(".sticky").each(function() {
+    Stickyfill.add(this);
+  });
+}
+
+function init() {
+  setupStickyfill();
+
+  // 1. force a resize on load to ensure proper dimensions are sent to scrollama
+  handleResize();
+
+  // 2. setup the scroller passing options
+  // 		this will also initialize trigger observations
+  // 3. bind scrollama event handlers (this can be chained like below)
+  scroller
+    .setup({
+      step: "#scrolly article .step",
+      graphic: "figure",
+      text: "#scrolly",
+      offset: 0.33,
+      debug: true,
+    })
+    .onStepEnter(handleStepEnter);
+
+  // setup resize event
+  window.addEventListener("resize", handleResize);
+}
+
+
+/**
+ * Loading data
+ */
+
+Promise.all([
+  d3.csv('./data/MMSI_2016.csv')
+]).then(result => {
+  // save data
+  dataContainer.mainData = result[0];
+
+  // initialize scrollama
+  init();
+  canvas();
+
+}).catch(error => {
+  console.log(error);
+});
