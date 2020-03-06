@@ -32,7 +32,5 @@ export default function canvas() {
     // graph
     svg.append("g")
         .attr("id", "myGraph");
-    
-
 
 }

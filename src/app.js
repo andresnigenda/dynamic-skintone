@@ -1,22 +1,22 @@
 /**
  * Skin Tone and Social Mobility in Mexico
  * Andres Nigenda
- * 
+ *
  * Scrollytelling implementation with scrollama
  */
 
 import "intersection-observer";
 import scrollama from "scrollama";
-import * as d3 from 'd3';
-import './stylesheets/main.css';
-import heatMapAll from './heatmap';
-import canvas from "./canvas";
-
+import * as d3 from "d3";
+import "./stylesheets/main.css";
+import heatMap from "./heatmap";
+import updateHeatMap from "./updateHeatMap";
+import startsvg from "./startsvg";
 
 // set up
 var scrolly = d3.select("#scrolly");
 var figure = scrolly.select("figure");
-var chart = scrolly.select("#chart")
+var chart = scrolly.select("#chart");
 var article = scrolly.select("article");
 var step = article.selectAll(".step");
 let dataContainer = [];
@@ -34,18 +34,14 @@ function handleResize() {
   var figureH = window.innerHeight / 1.2;
   var figureMarginTop = (window.innerHeight - figureH) / 2;
 
-  figure
-    .style("height", figureH + "px")
-    .style("top", figureMarginTop + "px");
-  
+  figure.style("height", figureH + "px").style("top", figureMarginTop + "px");
+
   // 3. update graph measures
-  console.log(figureH)
+  //console.log(figureH);
   var chartH = 600;
   var chartW = 600;
 
-  chart
-      .style("height", chartH + "px")
-      .style("width", chartW + "px");
+  chart.style("height", chartH + "px").style("width", chartW + "px");
 
   // 4. tell scrollama to update new element dimensions
   scroller.resize();
@@ -54,7 +50,7 @@ function handleResize() {
 // scrollama event handlers
 function handleStepEnter(response) {
   console.log(response);
-  console.log(dataContainer.mainData);
+  //console.log(dataContainer.mainData);
   // response = { element, direction, index }
 
   // add color to current step only
@@ -63,12 +59,14 @@ function handleStepEnter(response) {
   });
 
   // update graphic based on step
-  if(response.index === 0) {
-    heatMapAll(dataContainer.mainData, response);
+  //d => d.P1_1 === "1"
+
+  if (response.index === 0) {
+    heatMap(dataContainer.mainData, d => d, response);
   } else if (response.index === 1) {
-    figure.select("p").text("meow");
+    heatMap(dataContainer.mainData, d => d.P1_1 === "2", response);
   } else {
-    figure.select("p").text("2");
+    heatMap(dataContainer.mainData, d => d.P1_1 === "1", response);
   }
   handleResize();
 }
@@ -92,7 +90,7 @@ function init() {
     .setup({
       step: "#scrolly article .step",
       offset: 0.33,
-      debug: true,
+      debug: true
     })
     .onStepEnter(handleStepEnter);
 
@@ -100,21 +98,19 @@ function init() {
   window.addEventListener("resize", handleResize);
 }
 
-
 /**
  * Loading data
  */
 
-Promise.all([
-  d3.csv('./data/MMSI_2016.csv')
-]).then(result => {
-  // save data
-  dataContainer.mainData = result[0];
+Promise.all([d3.csv("./data/MMSI_2016.csv")])
+  .then(result => {
+    // save data
+    dataContainer.mainData = result[0];
 
-  // initialize scrollama
-  init();
-  canvas();
-
-}).catch(error => {
-  console.log(error);
-});
+    // initialize scrollama
+    init();
+    startsvg();
+  })
+  .catch(error => {
+    console.log(error);
+  });
