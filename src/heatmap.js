@@ -1,5 +1,6 @@
 import * as d3 from "d3";
 import { transition } from "d3-transition";
+import { tip } from "d3-tip";
 //import "./transition-polyfill";
 
 export default function heatMap(data, my_filter, response) {
@@ -7,7 +8,7 @@ export default function heatMap(data, my_filter, response) {
   console.log("meow");
   console.log(response.index);
   const containerStart = d3
-    .select("#chart")
+    .select(".chart")
     .node()
     .getBoundingClientRect();
   const width = containerStart.width - 50;
@@ -16,7 +17,7 @@ export default function heatMap(data, my_filter, response) {
   const plotWidth = width - margin.left - margin.right;
   const plotHeight = height - margin.top - margin.bottom;
 
-  var svg = d3.select("#chart").select("svg");
+  var svg = d3.select(".chart").select("svg");
 
   // work with data
   var educLabelsD = {
@@ -72,6 +73,38 @@ export default function heatMap(data, my_filter, response) {
     ])
     .domain([1, getMaxVal(processedData)]);
   // ['#322d27', '#3d230d', '#4a382e', '#694d3f', '#7e6455', '#96775b', '#b4997e', '#dec198', '#e1b8b2', '#f0d1ce', '#faebee']
+  // create tooltip
+
+  var tooltip = d3
+    .select("#plotArea")
+    .append("div")
+    .style("opacity", 0)
+    .attr("class", "tooltip")
+    .style("background-color", "white")
+    .style("border", "solid")
+    .style("border-width", "2px")
+    .style("border-radius", "5px")
+    .style("padding", "5px");
+
+  var mouseover = function(d) {
+    tooltip.style("opacity", 1);
+    d3.select(this)
+      .style("stroke", "black")
+      .style("opacity", 1);
+  };
+  var mousemove = function(d) {
+    tooltip
+      .html("Meow: " + d.ratio)
+      .style("left", d3.mouse(this)[0] + 70 + "px")
+      .style("top", d3.mouse(this)[1] + "px");
+  };
+  var mouseleave = function(d) {
+    tooltip.style("opacity", 0);
+    d3.select(this)
+      .style("stroke", "none")
+      .style("opacity", 0.8);
+  };
+
   // x axis
   svg
     .select(".xAxis")
@@ -86,41 +119,74 @@ export default function heatMap(data, my_filter, response) {
   svg.select(".yAxis").call(d3.axisLeft(yScale));
 
   // plot + transition v5
-
-  var heatMap = svg
+  // update even if rectangles don't exist
+  var update = svg
     .select("#plotArea")
-    .selectAll()
+    .selectAll("rect")
     .data(processedData, function(d) {
       return d.NivEsc_Inf + ":" + d.NivEsc_PP;
+    });
+
+  // enter rectangles with appropriate position
+  var enter = update
+    .enter()
+    .append("rect")
+    .attr("x", function(d) {
+      return xScale(d.NivEsc_PP);
     })
-    .join(
-      enter =>
-        enter
-          .append("rect")
-          .attr("x", function(d) {
-            return xScale(d.NivEsc_Inf);
-          })
-          .attr("y", function(d) {
-            return yScale(d.NivEsc_PP);
-          })
-          .attr("width", xScale.bandwidth())
-          .attr("height", yScale.bandwidth())
-          .call(enter =>
-            enter
-              .transition()
-              .duration(1000)
-              .style("fill", function(d) {
-                return myColor(d.ratio);
-              })
-          ),
-      update =>
-        update.call(update =>
-          update
-            .transition()
-            .duration(1000)
-            .style("fill", "blue")
-        )
-    );
+    .attr("y", function(d) {
+      return yScale(d.NivEsc_Inf);
+    })
+    .attr("width", xScale.bandwidth())
+    .attr("height", yScale.bandwidth());
+
+  var exit = update.exit();
+
+  // update with transition
+  update
+    .transition()
+    .duration(2000)
+    .style("fill", function(d) {
+      return myColor(d.ratio);
+    });
+
+  // enter rectangles with default color
+  enter
+    .style("fill", function(d) {
+      return myColor(d.ratio);
+    })
+    .on("mouseover", mouseover)
+    .on("mousemove", mousemove)
+    .on("mouseleave", mouseleave);
+
+  // exit rectangles that do not exist anymore
+  exit
+    .transition()
+    .duration(1000)
+    .style("fill", "grey")
+    .attr("width", 0)
+    .attr("height", 0)
+    .remove();
+
+  update.merge(enter);
+}
+
+function pulsate(selection) {
+  recursive_transitions();
+  function recursive_transitions() {
+    selection
+      .transition()
+      .duration(400)
+      .attr("stroke-width", 2)
+      .attr("r", 8)
+      .ease("sin-in")
+      .transition()
+      .duration(800)
+      .attr("stroke-width", 3)
+      .attr("r", 12)
+      .ease("bounce-in")
+      .each("end", recursive_transitions);
+  }
 }
 
 function reduceData(data, replaceVals, filter) {

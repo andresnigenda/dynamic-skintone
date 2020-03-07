@@ -31,11 +31,30 @@ export default function startsvg() {
     .attr("class", "xAxis")
     .attr("transform", "translate(150," + height + ")");
 
+  // x-axis title
+  svg
+    .append("text")
+    .attr("transform", "translate(" + width + "," + (height + 140) + ")")
+    .style("font-size", 12)
+    .style("text-anchor", "middle")
+    .text("Legal Guardian's Highest Degree Earned");
+
   // y-axis
   svg
     .append("g")
     .attr("class", "yAxis")
     .attr("transform", "translate(149.9, 0)");
+
+  // y-axis title
+  svg
+    .append("text")
+    .attr(
+      "transform",
+      "translate(" + 20 + "," + height / 2 + ") rotate(" + 270 + ")"
+    )
+    .style("font-size", 12)
+    .style("text-anchor", "middle")
+    .text("Highest Degree Earned");
 
   // graph
   svg

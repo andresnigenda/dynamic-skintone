@@ -90,7 +90,7 @@ function init() {
     .setup({
       step: "#scrolly article .step",
       offset: 0.33,
-      debug: true
+      debug: false
     })
     .onStepEnter(handleStepEnter);
 
