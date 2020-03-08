@@ -1,6 +1,6 @@
 import * as d3 from "d3";
-import { transition } from "d3-transition";
-import { tip } from "d3-tip";
+import transition from "d3-transition";
+import d3Tip from "d3-tip";
 //import "./transition-polyfill";
 
 export default function heatMap(data, my_filter, response) {
@@ -74,36 +74,79 @@ export default function heatMap(data, my_filter, response) {
     .domain([1, getMaxVal(processedData)]);
   // ['#322d27', '#3d230d', '#4a382e', '#694d3f', '#7e6455', '#96775b', '#b4997e', '#dec198', '#e1b8b2', '#f0d1ce', '#faebee']
   // create tooltip
+  /*   var tooltip = d3Tip()
+    .attr("class", "d3-tip")
+    .offset([-10, 0])
+    .html(function(d) {
+      return (
+        "<strong style='color:maroon'>Population:</strong> <span style='color:black'>" +
+        d.Factor_Per +
+        "</span>"
+      );
+    }); */
 
-  var tooltip = d3
-    .select("#plotArea")
+  // tooltip
+  var div = d3
+    .select(".chart")
     .append("div")
-    .style("opacity", 0)
     .attr("class", "tooltip")
-    .style("background-color", "white")
+    .style("opacity", 0);
+  /*     .style("background-color", "grey")
     .style("border", "solid")
-    .style("border-width", "2px")
+    .style("border-width", "1px")
     .style("border-radius", "5px")
-    .style("padding", "5px");
+    .style("padding", "5px"); */
 
+  // https://stackoverflow.com/questions/16256454/d3-js-position-tooltips-using-element-position-not-mouse-position
+  // https://bl.ocks.org/philipcdavis/6035183e3508e3c2e8de
   var mouseover = function(d) {
-    tooltip.style("opacity", 1);
+    //console.log(d3.event.pageX);
+    //console.log(d3.event.pageY);
+    div
+      .transition()
+      .duration(200)
+      .style("opacity", 0.9);
+    div
+      .html(
+        "<div> <span class='light'> Population :</span> " +
+          d.Factor_Per +
+          "</div>"
+      )
+      .style("left", parseInt(d3.select(this).attr("x")) + 150 + "px")
+      .style("top", parseInt(d3.select(this).attr("y")) - 5 + "px");
     d3.select(this)
-      .style("stroke", "black")
+      .style("stroke", "purple")
+      .style("stroke-width", 2)
       .style("opacity", 1);
   };
-  var mousemove = function(d) {
+  /*   var mousemove = function(d) {
     tooltip
-      .html("Meow: " + d.ratio)
+      .html("The exact value of<br>this cell is: " + d.ratio)
       .style("left", d3.mouse(this)[0] + 70 + "px")
       .style("top", d3.mouse(this)[1] + "px");
-  };
+  }; */
   var mouseleave = function(d) {
-    tooltip.style("opacity", 0);
-    d3.select(this)
-      .style("stroke", "none")
-      .style("opacity", 0.8);
+    div.style("opacity", 0);
+    d3.select(this).style("stroke", "none");
   };
+
+  // steps
+  svg
+    .select("#plotArea")
+    .data(processedData)
+    .enter()
+    .append("line")
+    .attr("class", "line")
+    .style("stroke", "orange")
+    .style("opacity", 1)
+    .attr("x", function(d) {
+      return xScale(d.NivEsc_PP);
+    })
+    .attr("y", function(d) {
+      return yScale(d.NivEsc_PP);
+    })
+    .attr("width", xScale.bandwidth())
+    .attr("height", yScale.bandwidth());
 
   // x axis
   svg
@@ -128,9 +171,11 @@ export default function heatMap(data, my_filter, response) {
     });
 
   // enter rectangles with appropriate position
+  // call tooltip
   var enter = update
     .enter()
     .append("rect")
+    .attr("class", "rect")
     .attr("x", function(d) {
       return xScale(d.NivEsc_PP);
     })
@@ -138,26 +183,27 @@ export default function heatMap(data, my_filter, response) {
       return yScale(d.NivEsc_Inf);
     })
     .attr("width", xScale.bandwidth())
-    .attr("height", yScale.bandwidth());
+    .attr("height", yScale.bandwidth())
+    .on("mouseover", mouseover)
+    .on("mouseout", mouseleave);
+
+  /*   enter.call(tooltip);
+  enter.on("mouseover", tooltip.show).on("mouseout", tooltip.hide); */
 
   var exit = update.exit();
 
   // update with transition
   update
     .transition()
-    .duration(2000)
+    .duration(1000)
     .style("fill", function(d) {
       return myColor(d.ratio);
     });
 
   // enter rectangles with default color
-  enter
-    .style("fill", function(d) {
-      return myColor(d.ratio);
-    })
-    .on("mouseover", mouseover)
-    .on("mousemove", mousemove)
-    .on("mouseleave", mouseleave);
+  enter.style("fill", function(d) {
+    return myColor(d.ratio);
+  });
 
   // exit rectangles that do not exist anymore
   exit
@@ -167,26 +213,6 @@ export default function heatMap(data, my_filter, response) {
     .attr("width", 0)
     .attr("height", 0)
     .remove();
-
-  update.merge(enter);
-}
-
-function pulsate(selection) {
-  recursive_transitions();
-  function recursive_transitions() {
-    selection
-      .transition()
-      .duration(400)
-      .attr("stroke-width", 2)
-      .attr("r", 8)
-      .ease("sin-in")
-      .transition()
-      .duration(800)
-      .attr("stroke-width", 3)
-      .attr("r", 12)
-      .ease("bounce-in")
-      .each("end", recursive_transitions);
-  }
 }
 
 function reduceData(data, replaceVals, filter) {
