@@ -5,7 +5,6 @@ import d3Tip from "d3-tip";
 
 export default function heatMap(data, my_filter, response) {
   // container dimensions
-  console.log("meow");
   console.log(response.index);
   const containerStart = d3
     .select(".chart")
@@ -41,7 +40,6 @@ export default function heatMap(data, my_filter, response) {
   ];
 
   const processedData = reduceData(data, educLabelsD, my_filter);
-  //console.log(processedData);
 
   // x scale
   var xScale = d3
@@ -57,7 +55,8 @@ export default function heatMap(data, my_filter, response) {
     .padding(0.01);
   // color scale
   var myColor = d3
-    .scaleOrdinal()
+    .scaleLinear()
+    .domain([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11])
     .range([
       "#322d27",
       "#3d230d",
@@ -70,20 +69,7 @@ export default function heatMap(data, my_filter, response) {
       "#e1b8b2",
       "#f0d1ce",
       "#faebee"
-    ])
-    .domain([1, getMaxVal(processedData)]);
-  // ['#322d27', '#3d230d', '#4a382e', '#694d3f', '#7e6455', '#96775b', '#b4997e', '#dec198', '#e1b8b2', '#f0d1ce', '#faebee']
-  // create tooltip
-  /*   var tooltip = d3Tip()
-    .attr("class", "d3-tip")
-    .offset([-10, 0])
-    .html(function(d) {
-      return (
-        "<strong style='color:maroon'>Population:</strong> <span style='color:black'>" +
-        d.Factor_Per +
-        "</span>"
-      );
-    }); */
+    ]);
 
   // tooltip
   var div = d3
@@ -91,25 +77,26 @@ export default function heatMap(data, my_filter, response) {
     .append("div")
     .attr("class", "tooltip")
     .style("opacity", 0);
-  /*     .style("background-color", "grey")
-    .style("border", "solid")
-    .style("border-width", "1px")
-    .style("border-radius", "5px")
-    .style("padding", "5px"); */
 
   // https://stackoverflow.com/questions/16256454/d3-js-position-tooltips-using-element-position-not-mouse-position
   // https://bl.ocks.org/philipcdavis/6035183e3508e3c2e8de
   var mouseover = function(d) {
-    //console.log(d3.event.pageX);
-    //console.log(d3.event.pageY);
     div
       .transition()
       .duration(200)
       .style("opacity", 0.9);
     div
       .html(
-        "<div> <span class='light'> Population :</span> " +
+        "<div> <span class='light'> Average Skin Tone :</span> " +
+          d.ratio +
+          "</div>" +
+          "</br>" +
+          "<div> <span class='light'> Population :</span> " +
           d.Factor_Per +
+          "</div>" +
+          "</br>" +
+          "<div> <span class='light'> Proportion :</span> " +
+          d.prop +
           "</div>"
       )
       .style("left", parseInt(d3.select(this).attr("x")) + 150 + "px")
@@ -119,12 +106,7 @@ export default function heatMap(data, my_filter, response) {
       .style("stroke-width", 2)
       .style("opacity", 1);
   };
-  /*   var mousemove = function(d) {
-    tooltip
-      .html("The exact value of<br>this cell is: " + d.ratio)
-      .style("left", d3.mouse(this)[0] + 70 + "px")
-      .style("top", d3.mouse(this)[1] + "px");
-  }; */
+
   var mouseleave = function(d) {
     div.style("opacity", 0);
     d3.select(this).style("stroke", "none");
@@ -187,9 +169,6 @@ export default function heatMap(data, my_filter, response) {
     .on("mouseover", mouseover)
     .on("mouseout", mouseleave);
 
-  /*   enter.call(tooltip);
-  enter.on("mouseover", tooltip.show).on("mouseout", tooltip.hide); */
-
   var exit = update.exit();
 
   // update with transition
@@ -197,12 +176,16 @@ export default function heatMap(data, my_filter, response) {
     .transition()
     .duration(1000)
     .style("fill", function(d) {
+      console.log(myColor(d.ratio));
       return myColor(d.ratio);
     });
 
   // enter rectangles with default color
   enter.style("fill", function(d) {
-    return myColor(d.ratio);
+    console.log(d.ratio);
+    console.log(Math.round(d.ratio));
+    console.log(myColor(Math.round(d.ratio)));
+    return myColor(Math.round(d.ratio));
   });
 
   // exit rectangles that do not exist anymore
@@ -215,12 +198,12 @@ export default function heatMap(data, my_filter, response) {
     .remove();
 }
 
+// HELPER FUNCTIONS
 function reduceData(data, replaceVals, filter) {
   // reduces data grouped by two variables
-  // filters according to provided filterz
+  // filters according to provided selections
   // https://stackoverflow.com/questions/46794232/group-objects-by-multiple-properties-in-array-then-sum-up-their-values
   var helper = {};
-  //var idx = 0;
   var result = data
     .filter(d => {
       return filter(d);
@@ -260,8 +243,16 @@ function reduceData(data, replaceVals, filter) {
       //console.log(r);
       return r;
     }, []);
+  // total population
+  let initialValue = 0;
+  let totalPop = result.reduce(function(accumulator, currentValue) {
+    return accumulator + currentValue.Factor_Per;
+  }, initialValue);
+  // add average skintone and proportion of population
   result.forEach(function(element) {
-    element.ratio = element.sktw / element.Factor_Per;
+    element.ratio = Math.round((element.sktw / element.Factor_Per) * 100) / 100;
+    element.prop =
+      parseFloat((element.Factor_Per / totalPop) * 100).toFixed(2) + "%";
   });
   console.log(result);
   return result;

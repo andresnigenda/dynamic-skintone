@@ -7,7 +7,7 @@
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
-  background-color: #f3f3f3;
+  /* background-color: #f3f3f3; */
   padding: 1rem;
 }
 
@@ -35,20 +35,6 @@ figure {
   z-index: 0;
 }
 
-/* figure p {
-  text-align: center;
-  padding: 1rem;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  -moz-transform: translate(-50%, -50%);
-  -webkit-transform: translate(-50%, -50%);
-  transform: translate(-50%, -50%);
-  font-size: 8rem;
-  font-weight: 900;
-  color: #fff;
-} */
-
 .chart {
   padding: 1rem;
   position: absolute;
@@ -58,26 +44,6 @@ figure {
   -webkit-transform: translate(-50%, -50%);
   transform: translate(-50%, -50%);
 }
-
-/*.chart g {
-  background-color: blue;
-  background-image: linear-gradient(
-    45deg,
-    #bababa 2.38%,
-    #ffffff 2.38%,
-    #ffffff 26.19%,
-    #fff 26.19%,
-    #fff 50%,
-    #bababa 50%,
-    #bababa 52.38%,
-    #ffffff 52.38%,
-    #ffffff 76.19%,
-    #fff 76.19%,
-    #fff 100%
-  );
-  background-size: 59.4px 59.4px;
-}
-*/
 
 .step {
   margin: 0 auto 2rem auto;
@@ -119,17 +85,36 @@ h3 {
 }
 
 .tooltip {
+  border-radius: 5px;
   position: absolute;
-  line-height: 1;
   font-weight: bold;
-  padding: 12px;
+  padding: 2px;
   background: rgba(0, 0, 0, 0.8);
   color: #fff;
   text-align: center;
-  width: 110px;
-  height: 14px;
-  padding: 2px;
-  font: 12px sans-serif;
+  width: 140px;
+  height: 58px;
+  font: 10px sans-serif;
+}
+
+.light {
+  color: #bbb;
+}
+
+.svg-container {
+  width: 100%;
+  height: 100px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+#scrolldown-explore {
+  text-align: center;
+  font: 14px sans-serif;
+  height: 1px;
+  color: grey;
 }
 
 /* .d3-tip:after {
@@ -154,16 +139,36 @@ h3 {
 	font-family: sans-serif;
 	font-size: 12px; */
 
-.light {
-  color: #bbb;
+/*.chart g {
+  background-color: blue;
+  background-image: linear-gradient(
+    45deg,
+    #bababa 2.38%,
+    #ffffff 2.38%,
+    #ffffff 26.19%,
+    #fff 26.19%,
+    #fff 50%,
+    #bababa 50%,
+    #bababa 52.38%,
+    #ffffff 52.38%,
+    #ffffff 76.19%,
+    #fff 76.19%,
+    #fff 100%
+  );
+  background-size: 59.4px 59.4px;
 }
+*/
 
-#svg-sd {
-  display: block;
-}
-
-.scroll-svg {
-  display: block;
-  width: 100%;
-  height: 150px;
-}
+/* figure p {
+  text-align: center;
+  padding: 1rem;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -moz-transform: translate(-50%, -50%);
+  -webkit-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+  font-size: 8rem;
+  font-weight: 900;
+  color: #fff;
+} */

@@ -59,14 +59,19 @@ function handleStepEnter(response) {
   });
 
   // update graphic based on step
-  //d => d.P1_1 === "1"
+  // d.P1_1 === "2" - women
+  // d.est_socio_ENH === "1" - bajo
 
   if (response.index === 0) {
-    heatMap(dataContainer.mainData, d => d, response);
+    heatMap(dataContainer.mainData, d => d, response); // all
   } else if (response.index === 1) {
-    heatMap(dataContainer.mainData, d => d.P1_1 === "2", response);
+    heatMap(dataContainer.mainData, d => d.P1_1 === "2", response); // women
   } else {
-    heatMap(dataContainer.mainData, d => d.P1_1 === "1", response);
+    heatMap(
+      dataContainer.mainData,
+      d => d.P1_1 === "2" && d.est_socio_ENH === "1",
+      response
+    ); // low income women
   }
   handleResize();
 }
