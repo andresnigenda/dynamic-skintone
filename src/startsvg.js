@@ -1,12 +1,12 @@
 // setup initial svg canvas
 import * as d3 from "d3";
 
-export default function startsvg() {
+export default function startsvg(tag) {
   // canvas setup function
 
   // container dimensions
   const containerStart = d3
-    .select("#chart")
+    .select(tag)
     .node()
     .getBoundingClientRect();
   //const width = containerStart.width;
@@ -18,7 +18,7 @@ export default function startsvg() {
   //console.log(width, height);
   // append svg object to the body of the page
   var svg = d3
-    .select("#chart")
+    .select(tag)
     .append("svg")
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom);
@@ -34,10 +34,10 @@ export default function startsvg() {
   // x-axis title
   svg
     .append("text")
-    .attr("transform", "translate(" + width + "," + (height + 140) + ")")
+    .attr("transform", "translate(" + width + "," + (height + 100) + ")")
     .style("font-size", 12)
     .style("text-anchor", "middle")
-    .text("Legal Guardian's Highest Degree Earned");
+    .text("Perceived socioeconomic level at age 14");
 
   // y-axis
   svg
@@ -50,11 +50,11 @@ export default function startsvg() {
     .append("text")
     .attr(
       "transform",
-      "translate(" + 20 + "," + height / 2 + ") rotate(" + 270 + ")"
+      "translate(" + 50 + "," + height / 2 + ") rotate(" + 270 + ")"
     )
     .style("font-size", 12)
     .style("text-anchor", "middle")
-    .text("Highest Degree Earned");
+    .text("Perceived socioeconomic level");
 
   // graph
   svg

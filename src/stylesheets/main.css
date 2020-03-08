@@ -110,13 +110,22 @@ h3 {
   flex-direction: column;
 }
 
-#scrolldown-explore {
+#scrolldown {
   text-align: center;
   font: 14px sans-serif;
   height: 1px;
   color: grey;
 }
 
+#explore {
+  display: flex;
+  justify-content: center;
+}
+
+section #explore {
+  display: flex;
+  justify-content: center;
+}
 /* .d3-tip:after {
   box-sizing: border-box;
   display: inline;

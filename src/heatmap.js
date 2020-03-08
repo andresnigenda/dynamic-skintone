@@ -1,6 +1,7 @@
 import * as d3 from "d3";
 import transition from "d3-transition";
 import d3Tip from "d3-tip";
+import * as u from "./utils";
 //import "./transition-polyfill";
 
 export default function heatMap(data, my_filter, response) {
@@ -18,40 +19,19 @@ export default function heatMap(data, my_filter, response) {
 
   var svg = d3.select(".chart").select("svg");
 
-  // work with data
-  var educLabelsD = {
-    "1": "No Schooling",
-    "2": "Incomplete Primary",
-    "3": "Complete Primary",
-    "4": "Incomplete Secondary",
-    "5": "Complete Secondary",
-    "6": "High School",
-    "7": "College or Higher",
-    "9": "Not Specified"
-  };
-  var educLabels = [
-    "No Schooling",
-    "Incomplete Primary",
-    "Complete Primary",
-    "Incomplete Secondary",
-    "Complete Secondary",
-    "High School",
-    "College or Higher"
-  ];
-
-  const processedData = reduceData(data, educLabelsD, my_filter);
+  const processedData = u.reduceData(data, socioLabelsD, my_filter);
 
   // x scale
   var xScale = d3
     .scaleBand()
     .range([0, plotWidth])
-    .domain(educLabels)
+    .domain(socioLabels)
     .padding(0.01);
   // y scale
   var yScale = d3
     .scaleBand()
     .range([plotHeight, 0])
-    .domain(educLabels)
+    .domain(socioLabels)
     .padding(0.01);
   // color scale
   var myColor = d3
@@ -122,10 +102,10 @@ export default function heatMap(data, my_filter, response) {
     .style("stroke", "orange")
     .style("opacity", 1)
     .attr("x", function(d) {
-      return xScale(d.NivEsc_PP);
+      return xScale(d.socioPast);
     })
     .attr("y", function(d) {
-      return yScale(d.NivEsc_PP);
+      return yScale(d.socioPresent);
     })
     .attr("width", xScale.bandwidth())
     .attr("height", yScale.bandwidth());
@@ -149,7 +129,7 @@ export default function heatMap(data, my_filter, response) {
     .select("#plotArea")
     .selectAll("rect")
     .data(processedData, function(d) {
-      return d.NivEsc_Inf + ":" + d.NivEsc_PP;
+      return d.socioPresent + ":" + d.socioPast;
     });
 
   // enter rectangles with appropriate position
@@ -159,10 +139,10 @@ export default function heatMap(data, my_filter, response) {
     .append("rect")
     .attr("class", "rect")
     .attr("x", function(d) {
-      return xScale(d.NivEsc_PP);
+      return xScale(d.socioPast);
     })
     .attr("y", function(d) {
-      return yScale(d.NivEsc_Inf);
+      return yScale(d.socioPresent);
     })
     .attr("width", xScale.bandwidth())
     .attr("height", yScale.bandwidth())
@@ -176,15 +156,15 @@ export default function heatMap(data, my_filter, response) {
     .transition()
     .duration(1000)
     .style("fill", function(d) {
-      console.log(myColor(d.ratio));
-      return myColor(d.ratio);
+      //console.log(myColor(d.ratio));
+      return myColor(Math.round(d.ratio));
     });
 
   // enter rectangles with default color
   enter.style("fill", function(d) {
-    console.log(d.ratio);
-    console.log(Math.round(d.ratio));
-    console.log(myColor(Math.round(d.ratio)));
+    //console.log(d.ratio);
+    //console.log(Math.round(d.ratio));
+    //console.log(myColor(Math.round(d.ratio)));
     return myColor(Math.round(d.ratio));
   });
 
@@ -198,98 +178,49 @@ export default function heatMap(data, my_filter, response) {
     .remove();
 }
 
-// HELPER FUNCTIONS
-function reduceData(data, replaceVals, filter) {
-  // reduces data grouped by two variables
-  // filters according to provided selections
-  // https://stackoverflow.com/questions/46794232/group-objects-by-multiple-properties-in-array-then-sum-up-their-values
-  var helper = {};
-  var result = data
-    .filter(d => {
-      return filter(d);
-    })
-    .reduce(function(r, item) {
-      //idx += 1;
-      // filter row
-      var filteredItem = (({ NivEsc_Inf, NivEsc_PP, Factor_Per, P10_2 }) => ({
-        NivEsc_Inf,
-        NivEsc_PP,
-        Factor_Per,
-        P10_2
-      }))(item);
-      if (!excludeThis(filteredItem)) {
-        // define variables
-        var informant = replaceVals[filteredItem.NivEsc_Inf];
-        var princProv = replaceVals[filteredItem.NivEsc_PP];
-        var pop = convertStringToNumber(filteredItem.Factor_Per);
-        var skinTone = convertStringToNumber(filteredItem.P10_2);
-        var skinToneWeight = pop * skinTone;
-        var key = informant + "-" + princProv;
-        var finalItem = {
-          NivEsc_Inf: informant,
-          NivEsc_PP: princProv,
-          Factor_Per: pop,
-          sktw: skinToneWeight
-        };
+// some labels
+var educLabelsD = {
+  "1": "No Schooling",
+  "2": "Incomplete Primary",
+  "3": "Complete Primary",
+  "4": "Incomplete Secondary",
+  "5": "Complete Secondary",
+  "6": "High School",
+  "7": "College or Higher",
+  "9": "Not Specified"
+};
+var educLabels = [
+  "No Schooling",
+  "Incomplete Primary",
+  "Complete Primary",
+  "Incomplete Secondary",
+  "Complete Secondary",
+  "High School",
+  "College or Higher"
+];
 
-        if (!helper[key]) {
-          helper[key] = Object.assign({}, finalItem);
-          r.push(helper[key]);
-        } else {
-          helper[key].Factor_Per += pop;
-          helper[key].sktw += skinToneWeight;
-        }
-      }
-      //console.log(r);
-      return r;
-    }, []);
-  // total population
-  let initialValue = 0;
-  let totalPop = result.reduce(function(accumulator, currentValue) {
-    return accumulator + currentValue.Factor_Per;
-  }, initialValue);
-  // add average skintone and proportion of population
-  result.forEach(function(element) {
-    element.ratio = Math.round((element.sktw / element.Factor_Per) * 100) / 100;
-    element.prop =
-      parseFloat((element.Factor_Per / totalPop) * 100).toFixed(2) + "%";
-  });
-  console.log(result);
-  return result;
-}
+var socioLabelsD = {
+  "01": "1 - Lowest",
+  "02": "2",
+  "03": "3",
+  "04": "4",
+  "05": "5",
+  "06": "6",
+  "07": "7",
+  "08": "8",
+  "09": "9",
+  "10": "10 - Highest"
+};
 
-function convertStringToNumber(str) {
-  // convert string to number
-  return Number(str.split(",").join(""));
-}
-
-function excludeThis(obj) {
-  // checks if any entry in object is undefined or missing
-  const entries = Object.entries(obj);
-  var flag = false;
-  for (const [key, value] of entries) {
-    if (typeof value === "undefined") {
-      flag = true;
-      return flag;
-    } else if (value === " ") {
-      flag = true;
-      return flag;
-    } else if (value === "9") {
-      flag = true;
-      return flag;
-    }
-  }
-  return flag;
-}
-
-function getMaxVal(array) {
-  // gets the max value of the specified variable in the array
-  //console.log(array);
-  var maxVal = Math.max.apply(
-    Math,
-    array.map(function(o) {
-      return o.Factor_Per;
-    })
-  );
-  return maxVal;
-}
+var socioLabels = [
+  "1 - Lowest",
+  "2",
+  "3",
+  "4",
+  "5",
+  "6",
+  "7",
+  "8",
+  "9",
+  "10 - Highest"
+];

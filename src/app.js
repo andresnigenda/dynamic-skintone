@@ -13,6 +13,10 @@ import heatMap from "./heatmap";
 import updateHeatMap from "./updateHeatMap";
 import startsvg from "./startsvg";
 
+/**
+ * Scrolly section
+ */
+
 // set up
 var scrolly = d3.select("#scrolly");
 var figure = scrolly.select("figure");
@@ -66,16 +70,14 @@ function handleStepEnter(response) {
     heatMap(dataContainer.mainData, d => d, response); // all
   } else if (response.index === 1) {
     heatMap(dataContainer.mainData, d => d.P1_1 === "2", response); // women
-  } else {
-    heatMap(
-      dataContainer.mainData,
-      d => d.P1_1 === "2" && d.est_socio_ENH === "1",
-      response
-    ); // low income women
+  } else if (response.index === 2) {
+    heatMap(dataContainer.mainData, d => d.TamLoc_Ag1 === "1", response); // rural
+  } else if (response.index === 3) {
+    heatMap(dataContainer.mainData, d => d.NivEsc_Inf === "7", response); // college or more
   }
   handleResize();
 }
-
+//dataContainer.mainData, d => d.P1_1 === "2" && d.est_socio_ENH === "1",
 function setupStickyfill() {
   d3.selectAll(".sticky").each(function() {
     Stickyfill.add(this);
@@ -114,8 +116,14 @@ Promise.all([d3.csv("./data/MMSI_2016.csv")])
 
     // initialize scrollama
     init();
-    startsvg();
+    startsvg("#chart");
   })
   .catch(error => {
     console.log(error);
   });
+
+/**
+ * Compare Section
+ */
+
+startsvg("chart1");
