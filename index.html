@@ -14,18 +14,30 @@
         Moving up the ladder? How skin tone determines social mobility in Mexico
       </h1>
       <p>
-        Inequity is often a multidimensional phenomenon that disproportionately
-        affects some sets of the population. In Mexico this is particularly true
-        for people with darker skin tones. Some research has shown how
-        lightest-skinned Mexicans have, on average, 1.5 additional years of
-        schooling and 53% more hourly earnings than the darkest-skinned ones.
-        This project explores social mobility for Mexicans aged 25-64 in 2016
-        with different socioeconomic breakdowns.
+        In Mexico, there seems to be a persistent social steratification by skin
+        color. Lightest-skinned Mexicans have, on average, 1.5 additional years
+        of schooling and earn 53% more per hour than their darkest-skinned
+        peers. It is no surprise then, that having a darker skin tone is related
+        to lower upward mobility in Mexico. However, these inequities are
+        accentuated for some and attenuated for others according to ther
+        sociodemographic characteristics.
       </p>
       <p>
-        This project uses data from Mexico's National Institute of Statistics
-        and Geography (INEGI) 2016 Module on Intergenerational Social Mobility
-        (MMSI).
+        This project explores the different dimensions and breakdowns of social
+        mobility for Mexicans aged 25 to 64 in 2016 using data from Mexico's
+        National Institute of Statistics and Geography (INEGI). The 2016 Module
+        on Intergenerational Social Mobility (MMSI) lets us map the perceived
+        socioeconomic status of individuals at age 14 and compare it to their
+        current perceived status. The MMSI uses the PERLA scale, which assigns
+        skin color according to a palette with eleven skin tones.
+      </p>
+      <p>
+        Each bucket on the matrix is colored according to the average skin color
+        of the population it represents. For example, in 2016, 0.11% of Mexicans
+        perceived themselves to be at the highest socioeconomic status when they
+        were at the lowest at age 14, and the average skin tone of this subset
+        of the population was 7.79, which corresponds to color number 8 on the
+        PERLA scale.
       </p>
       <p id="scrolldown">Scroll Down to Explore</p>
       <div class="svg-container">
@@ -60,7 +72,7 @@
           </p>
         </div>
         <div class="step" data-step="2">
-          <h3>Sceond Chart</h3>
+          <h3>Second Chart</h3>
           <p>Second Chart</p>
         </div>
         <div class="step" data-step="3">
@@ -72,15 +84,27 @@
           <p>Fourth Chart</p>
         </div>
       </article>
-
       <figure>
-        <div class="chart" , id="chart"></div>
-        <div class="chart" , id="background"></div>
+        <div class="chart" id="chart"></div>
+        <!--         <div class="chart" , id="background"></div> -->
       </figure>
     </section>
     <section id="explore">
-      <h2>Now you explore</h2>
-      <div class="compare" , id="chart1">0</div>
+      <div id="text-explore"><h2>Now you explore</h2></div>
+      <div id="dropdown-container">
+        <div id="options">
+          <p class="bold">Filter by:</p>
+          <p>Highest Degree Achieved</p>
+          <div class="dropdown"></div>
+          <!-- <select id="dropdown">
+            <option value="first">First</option>
+            <option value="second">Second</option>
+            <option value="third">Third</option>
+            <option value="forth">Fourth</option>
+          </select> -->
+        </div>
+        <div class="compare" id="chart1"></div>
+      </div>
       <!--       <figure class="compare">
         <div class="compare" , id="chart2"></div>
       </figure> -->

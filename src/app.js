@@ -10,8 +10,8 @@ import scrollama from "scrollama";
 import * as d3 from "d3";
 import "./stylesheets/main.css";
 import heatMap from "./heatmap";
-import updateHeatMap from "./updateHeatMap";
 import startsvg from "./startsvg";
+import startsvgC from "./compare";
 
 /**
  * Scrolly section
@@ -67,13 +67,23 @@ function handleStepEnter(response) {
   // d.est_socio_ENH === "1" - bajo
 
   if (response.index === 0) {
-    heatMap(dataContainer.mainData, d => d, response); // all
+    heatMap(dataContainer.mainData, d => d, ".chart", response); // all
   } else if (response.index === 1) {
-    heatMap(dataContainer.mainData, d => d.P1_1 === "2", response); // women
+    heatMap(dataContainer.mainData, d => d.P1_1 === "2", ".chart", response); // women
   } else if (response.index === 2) {
-    heatMap(dataContainer.mainData, d => d.TamLoc_Ag1 === "1", response); // rural
+    heatMap(
+      dataContainer.mainData,
+      d => d.TamLoc_Ag1 === "1",
+      ".chart",
+      response
+    ); // rural
   } else if (response.index === 3) {
-    heatMap(dataContainer.mainData, d => d.NivEsc_Inf === "7", response); // college or more
+    heatMap(
+      dataContainer.mainData,
+      d => d.NivEsc_Inf === "7",
+      ".chart",
+      response
+    ); // college or more
   }
   handleResize();
 }
@@ -106,24 +116,69 @@ function init() {
 }
 
 /**
- * Loading data
+ * Do all
  */
 
 Promise.all([d3.csv("./data/MMSI_2016.csv")])
   .then(result => {
-    // save data
+    /**
+     *  Load data
+     */
     dataContainer.mainData = result[0];
 
-    // initialize scrollama
+    /**
+     *  Scrollytelling
+     */
     init();
     startsvg("#chart");
+
+    /**
+     *  Compare
+     */
+    startsvgC("#chart1");
+    heatMap(dataContainer.mainData, d => d, ".compare", NaN);
+    // dropdown
+    var dropDown = d3
+      .select(".dropdown")
+      .append("select")
+      .attr("id", "dropdown");
+
+    var educData = [
+      { value: "1", text: "No Schooling" },
+      { value: "2", text: "Incomplete Primary" },
+      { value: "3", text: "Complete Primary" },
+      { value: "4", text: "Incomplete Secondary" },
+      { value: "5", text: "Complete Secondary" },
+      { value: "6", text: "High School" },
+      { value: "7", text: "College or Higher" }
+    ];
+    var options = dropDown
+      .selectAll("option")
+      .data(educData)
+      .enter()
+      .append("option");
+
+    options
+      .text(function(d) {
+        return d.text;
+      })
+      .attr("value", function(d) {
+        return d.value;
+      });
+
+    dropDown.on("change", menuChanged);
+
+    function menuChanged() {
+      var selectedValue = d3.event.target.value;
+      console.log(selectedValue);
+      heatMap(
+        dataContainer.mainData,
+        d => d.NivEsc_Inf === selectedValue,
+        ".compare",
+        NaN
+      );
+    }
   })
   .catch(error => {
     console.log(error);
   });
-
-/**
- * Compare Section
- */
-
-startsvg("chart1");

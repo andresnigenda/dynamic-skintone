@@ -120,12 +120,42 @@ h3 {
 #explore {
   display: flex;
   justify-content: center;
+  flex-direction: column;
 }
 
-section #explore {
-  display: flex;
-  justify-content: center;
+#text-explore {
+  margin-top: 100px;
+  text-align: center;
 }
+
+div.compare {
+  position: relative;
+  height: 600px;
+  width: 600px;
+  margin-top: 50px;
+  left: 40%;
+}
+
+div #options {
+  position: relative;
+  left: 20%;
+  height: 10px;
+  width: 200px;
+}
+
+div #options p {
+  width: 200px;
+  height: 5px;
+  font-size: 1rem;
+}
+p.bold {
+  font-weight: bold;
+}
+
+select .dropdown {
+  width: 200px;
+}
+
 /* .d3-tip:after {
   box-sizing: border-box;
   display: inline;

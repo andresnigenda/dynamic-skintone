@@ -4,11 +4,11 @@ import d3Tip from "d3-tip";
 import * as u from "./utils";
 //import "./transition-polyfill";
 
-export default function heatMap(data, my_filter, response) {
+export default function heatMap(data, my_filter, select_id) {
   // container dimensions
-  console.log(response.index);
+  //console.log(response.index);
   const containerStart = d3
-    .select(".chart")
+    .select(select_id)
     .node()
     .getBoundingClientRect();
   const width = containerStart.width - 50;
@@ -17,7 +17,7 @@ export default function heatMap(data, my_filter, response) {
   const plotWidth = width - margin.left - margin.right;
   const plotHeight = height - margin.top - margin.bottom;
 
-  var svg = d3.select(".chart").select("svg");
+  var svg = d3.select(select_id).select("svg");
 
   const processedData = u.reduceData(data, socioLabelsD, my_filter);
 
@@ -53,7 +53,7 @@ export default function heatMap(data, my_filter, response) {
 
   // tooltip
   var div = d3
-    .select(".chart")
+    .select(select_id)
     .append("div")
     .attr("class", "tooltip")
     .style("opacity", 0);
@@ -79,8 +79,8 @@ export default function heatMap(data, my_filter, response) {
           d.prop +
           "</div>"
       )
-      .style("left", parseInt(d3.select(this).attr("x")) + 150 + "px")
-      .style("top", parseInt(d3.select(this).attr("y")) - 5 + "px");
+      .style("left", parseInt(d3.select(this).attr("x")) + 220 + "px")
+      .style("top", parseInt(d3.select(this).attr("y")) - 40 + "px");
     d3.select(this)
       .style("stroke", "purple")
       .style("stroke-width", 2)
