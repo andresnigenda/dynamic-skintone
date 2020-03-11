@@ -1,14 +1,18 @@
 import * as d3 from "d3";
-import transition from "d3-transition";
-import d3Tip from "d3-tip";
+//import transition from "d3-transition";
+//import d3Tip from "d3-tip";
+//import { annotation } from "d3-svg-annotation";
+//import * as d3Annotation from "d3-svg-annotation";
 import * as u from "./utils";
 //import "./transition-polyfill";
 
-export default function heatMap(data, my_filter, select_id) {
-  // container dimensions
+//reduceData(data, replaceVals, currentOption, specFilter)
+
+export default function heatMap(data, currentOption, specFilter, selectId) {
   //console.log(response.index);
+  /* container dimensions */
   const containerStart = d3
-    .select(select_id)
+    .select(selectId)
     .node()
     .getBoundingClientRect();
   const width = containerStart.width - 50;
@@ -17,23 +21,49 @@ export default function heatMap(data, my_filter, select_id) {
   const plotWidth = width - margin.left - margin.right;
   const plotHeight = height - margin.top - margin.bottom;
 
-  var svg = d3.select(select_id).select("svg");
+  var svg = d3.select(selectId).select("svg");
 
-  const processedData = u.reduceData(data, socioLabelsD, my_filter);
+  const processedData = u.reduceData(
+    data,
+    socioLabelsD,
+    currentOption,
+    specFilter
+  );
 
-  // x scale
+  /*   const annotations = [
+    {
+      note: {
+        label:
+          "Basic settings with subject position(x,y) and a note offset(dx, dy)",
+        title: "d3.annotationLabel"
+      },
+      x: 50,
+      y: 150,
+      dy: 137,
+      dx: 162
+    }
+  ].map(function(d) {
+    d.color = "#E8336D";
+    return d;
+  });
+  const makeAnnotations = d3
+    .annotation()
+    .type(d3.annotationLabel)
+    .annotations(annotations); */
+
+  /* x scale */
   var xScale = d3
     .scaleBand()
     .range([0, plotWidth])
     .domain(socioLabels)
     .padding(0.01);
-  // y scale
+  /* y scale */
   var yScale = d3
     .scaleBand()
     .range([plotHeight, 0])
     .domain(socioLabels)
     .padding(0.01);
-  // color scale
+  /* color scale */
   var myColor = d3
     .scaleLinear()
     .domain([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11])
@@ -51,15 +81,15 @@ export default function heatMap(data, my_filter, select_id) {
       "#faebee"
     ]);
 
-  // tooltip
+  /* tooltip */
+  // https://stackoverflow.com/questions/16256454/d3-js-position-tooltips-using-element-position-not-mouse-position
+  // https://bl.ocks.org/philipcdavis/6035183e3508e3c2e8de
   var div = d3
-    .select(select_id)
+    .select(selectId)
     .append("div")
     .attr("class", "tooltip")
     .style("opacity", 0);
 
-  // https://stackoverflow.com/questions/16256454/d3-js-position-tooltips-using-element-position-not-mouse-position
-  // https://bl.ocks.org/philipcdavis/6035183e3508e3c2e8de
   var mouseover = function(d) {
     div
       .transition()
@@ -92,25 +122,7 @@ export default function heatMap(data, my_filter, select_id) {
     d3.select(this).style("stroke", "none");
   };
 
-  // steps
-  svg
-    .select("#plotArea")
-    .data(processedData)
-    .enter()
-    .append("line")
-    .attr("class", "line")
-    .style("stroke", "orange")
-    .style("opacity", 1)
-    .attr("x", function(d) {
-      return xScale(d.socioPast);
-    })
-    .attr("y", function(d) {
-      return yScale(d.socioPresent);
-    })
-    .attr("width", xScale.bandwidth())
-    .attr("height", yScale.bandwidth());
-
-  // x axis
+  /* x axis */
   svg
     .select(".xAxis")
     .call(d3.axisBottom(xScale))
@@ -120,10 +132,59 @@ export default function heatMap(data, my_filter, select_id) {
     .style("text-anchor", "start")
     .attr("transform", "rotate(90)");
 
-  // y axis
+  /* y axis */
   svg.select(".yAxis").call(d3.axisLeft(yScale));
 
-  // plot + transition v5
+  /* line with steps */
+  var line = d3
+    .line()
+    .x(function(d) {
+      return xScaleBis(d);
+    })
+    .y(function(d) {
+      return yScaleBis(d);
+    })
+    .curve(d3.curveStepBefore);
+
+  // hacky (and probably bad) way to add an additional step
+  var xScaleBis = d3
+    .scaleBand()
+    .range([0, plotWidth * 1.1])
+    .domain(socioLabelsSteps)
+    .padding(0.01);
+
+  var yScaleBis = d3
+    .scaleBand()
+    .range([plotHeight * 1.1, 0])
+    .domain(socioLabelsSteps)
+    .padding(0.01);
+
+  /* steps w/transition */
+  svg
+    .selectAll("path.line")
+    .data([socioLabelsSteps])
+    .enter()
+    .append("path")
+    .attr("class", "line")
+    .attr("transform", "translate(150, 0)")
+    .attr("d", d => {
+      return line(d);
+    })
+    .attr("stroke", "purple")
+    .attr("stroke-width", 3)
+    .attr("fill", "none")
+    .attr("stroke-dasharray", function(d) {
+      return this.getTotalLength();
+    })
+    .attr("stroke-dashoffset", function(d) {
+      return this.getTotalLength();
+    })
+    .transition()
+    .duration(2500)
+    .ease(d3.easeLinear)
+    .attr("stroke-dashoffset", 0);
+
+  /* heatmap */
   // update even if rectangles don't exist
   var update = svg
     .select("#plotArea")
@@ -149,6 +210,11 @@ export default function heatMap(data, my_filter, select_id) {
     .on("mouseover", mouseover)
     .on("mouseout", mouseleave);
 
+  /*   d3.select("svg")
+    .append("g")
+    .attr("class", "annotation-group")
+    .call(makeAnnotations); */
+
   var exit = update.exit();
 
   // update with transition
@@ -162,9 +228,6 @@ export default function heatMap(data, my_filter, select_id) {
 
   // enter rectangles with default color
   enter.style("fill", function(d) {
-    //console.log(d.ratio);
-    //console.log(Math.round(d.ratio));
-    //console.log(myColor(Math.round(d.ratio)));
     return myColor(Math.round(d.ratio));
   });
 
@@ -178,7 +241,7 @@ export default function heatMap(data, my_filter, select_id) {
     .remove();
 }
 
-// some labels
+/* labels */
 var educLabelsD = {
   "1": "No Schooling",
   "2": "Incomplete Primary",
@@ -223,4 +286,18 @@ var socioLabels = [
   "8",
   "9",
   "10 - Highest"
+];
+
+var socioLabelsSteps = [
+  "1 - Lowest",
+  "2",
+  "3",
+  "4",
+  "5",
+  "6",
+  "7",
+  "8",
+  "9",
+  "10 - Highest",
+  "11"
 ];

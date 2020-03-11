@@ -65,25 +65,16 @@ function handleStepEnter(response) {
   // update graphic based on step
   // d.P1_1 === "2" - women
   // d.est_socio_ENH === "1" - bajo
+  /* heatMap(data, currentOption, specFilter, selectId) */
 
   if (response.index === 0) {
-    heatMap(dataContainer.mainData, d => d, ".chart", response); // all
+    heatMap(dataContainer.mainData, "", d => d, ".chart"); // all
   } else if (response.index === 1) {
-    heatMap(dataContainer.mainData, d => d.P1_1 === "2", ".chart", response); // women
+    heatMap(dataContainer.mainData, "", d => d.P1_1 === "2", ".chart"); // women
   } else if (response.index === 2) {
-    heatMap(
-      dataContainer.mainData,
-      d => d.TamLoc_Ag1 === "1",
-      ".chart",
-      response
-    ); // rural
+    heatMap(dataContainer.mainData, "", d => d.TamLoc_Ag1 === "1", ".chart"); // rural
   } else if (response.index === 3) {
-    heatMap(
-      dataContainer.mainData,
-      d => d.NivEsc_Inf === "7",
-      ".chart",
-      response
-    ); // college or more
+    heatMap(dataContainer.mainData, "", d => d.NivEsc_Inf === "7", ".chart"); // college or more
   }
   handleResize();
 }
@@ -135,30 +126,22 @@ Promise.all([d3.csv("./data/MMSI_2016.csv")])
     /**
      *  Compare
      */
+    // initial map
     startsvgC("#chart1");
-    heatMap(dataContainer.mainData, d => d, ".compare", NaN);
-    // dropdown
-    var dropDown = d3
+    heatMap(dataContainer.mainData, "", d => d, ".compare");
+    // schooling dropdown
+    var schoolDropDown = d3
       .select(".dropdown")
       .append("select")
-      .attr("id", "dropdown");
+      .attr("id", "schoolDropdown");
 
-    var educData = [
-      { value: "1", text: "No Schooling" },
-      { value: "2", text: "Incomplete Primary" },
-      { value: "3", text: "Complete Primary" },
-      { value: "4", text: "Incomplete Secondary" },
-      { value: "5", text: "Complete Secondary" },
-      { value: "6", text: "High School" },
-      { value: "7", text: "College or Higher" }
-    ];
-    var options = dropDown
+    var schoolOptions = schoolDropDown
       .selectAll("option")
       .data(educData)
       .enter()
       .append("option");
 
-    options
+    schoolOptions
       .text(function(d) {
         return d.text;
       })
@@ -166,19 +149,44 @@ Promise.all([d3.csv("./data/MMSI_2016.csv")])
         return d.value;
       });
 
-    dropDown.on("change", menuChanged);
+    schoolDropDown.on("change", menuChanged);
+    //raceDropDown.on("change")
 
     function menuChanged() {
       var selectedValue = d3.event.target.value;
       console.log(selectedValue);
+      console.log(d3.event.target.id);
       heatMap(
         dataContainer.mainData,
+        selectedValue,
         d => d.NivEsc_Inf === selectedValue,
-        ".compare",
-        NaN
+        ".compare"
       );
     }
   })
   .catch(error => {
     console.log(error);
   });
+
+// add listener
+
+var educData = [
+  { value: "all", text: "All" },
+  { value: "1", text: "No Schooling" },
+  { value: "2", text: "Incomplete Primary" },
+  { value: "3", text: "Complete Primary" },
+  { value: "4", text: "Incomplete Secondary" },
+  { value: "5", text: "Complete Secondary" },
+  { value: "6", text: "High School" },
+  { value: "7", text: "College or Higher" }
+];
+
+var raceData = [
+  { value: "all", text: "All" },
+  { value: "1", text: "Black / Black-Mixed" },
+  { value: "2", text: "Indigenous" },
+  { value: "3", text: "Mixed" },
+  { value: "4", text: "White" },
+  { value: "5", text: "Other" },
+  { value: "9", text: "Doesn't know" }
+];
