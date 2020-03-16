@@ -14,12 +14,12 @@
         Moving up the ladder? How skin tone determines social mobility in Mexico
       </h1>
       <p>
-        In Mexico, there seems to be a persistent social steratification by skin
-        color. Lightest-skinned Mexicans have, on average, 1.5 additional years
-        of schooling and earn 53% more per hour than their darkest-skinned
-        peers. It is no surprise then, that having a darker skin tone is related
-        to lower upward mobility in Mexico. However, these inequities are
-        accentuated for some and attenuated for others according to ther
+        In Mexico, there is persistent social stratification by skin color.
+        Lightest-skinned Mexicans have, on average, 1.5 additional years of
+        schooling and earn 53% more per hour than their darkest-skinned peers.
+        It is no surprise then, that having a darker skin tone is related to
+        lower upward mobility in Mexico. However, these inequities are
+        accentuated for some and attenuated for others according to their
         sociodemographic characteristics.
       </p>
       <p>
@@ -28,8 +28,9 @@
         National Institute of Statistics and Geography (INEGI). The 2016 Module
         on Intergenerational Social Mobility (MMSI) lets us map the perceived
         socioeconomic status of individuals at age 14 and compare it to their
-        current perceived status. The MMSI uses the PERLA scale, which assigns
-        skin color according to a palette with eleven skin tones.
+        current perceived status. The MMSI also provides information on the
+        perceived skin color using the PERLA scale, which assigns skin color
+        according to a palette with eleven skin tones.
       </p>
       <p>
         Each bucket on the matrix is colored according to the average skin color
@@ -57,31 +58,66 @@
     <section id="scrolly">
       <article>
         <div class="step" data-step="1">
-          <h3>First Chart</h3>
+          <h3>
+            The lighter your skin tone, the more likely you are to be better
+            off, or at least not worse off than when you were 14 y.o.
+          </h3>
           <p>
-            The cat was chasing the mouse kitty pounce, trip, faceplant you
-            didn't see that no you didn't definitely didn't lick, lick, lick,
-            and preen away the embarrassment stuff and things cat ass trophy.
-            Oooo! dangly balls! jump swat swing flies so sweetly to the floor
-            crash move on wash belly nap cat slap dog in face ears back wide
-            eyed for cry louder at reflection make plans to dominate world and
-            then take a nap sweet beast, so dead stare with ears cocked. Love
-            and coo around boyfriend who purrs and makes the perfect moonlight
-            eyes so i can purr and swat the glittery gleaming yarn to him (the
-            yarn is from a $125 sweater)
+            If we look at all Mexicans aged 25 to 64, we can notice two things.
+            First, the bucket with highest economic mobility has a lighter
+            average skin tone than the bucket with the highest downward
+            mobility. Second, buckets in the upper part of the matrix (buckets
+            with higher upward mobility and lower downward mobility) have a skin
+            tone that is, on average, lighter than the ones on the bottom half.
           </p>
         </div>
         <div class="step" data-step="2">
-          <h3>Second Chart</h3>
-          <p>Second Chart</p>
+          <h3>
+            Social mobility for darker-skinned women is lower than for their
+            darker-skinned peers
+          </h3>
+          <p>
+            For women, the overwhelming majority of higher upward mobility and
+            lower downward mobility buckets are lighter skinned on average. That
+            is, if you are a Mexican woman that was born with a darker skin
+            tone, not only are you more likely to not go up the ladder of social
+            mobility when compared to your lighter-skinned peers, but you are
+            also more likely to have a lower socioeconomic level, and stay
+            there.
+          </p>
         </div>
         <div class="step" data-step="3">
-          <h3>Third Chart</h3>
-          <p>Third Chart</p>
+          <h3>
+            Afromexicans have an even more reduced spectrum of upward mobility
+          </h3>
+          <p>
+            According to the latest inter-census survey, 1.2% of Mexico's
+            population identifies as afro-descendants. Given the previous
+            patterns that we have observed, it is not surprising to see that
+            even among Afromexicans, lighter-skinned Afromexicans have better
+            mobility outcomes than darker-skinned ones. Even worse, there are
+            gaps in the higher upward mobility and lower income mobility
+            buckets.
+          </p>
         </div>
         <div class="step" data-step="4">
-          <h3>Fourth Chart</h3>
-          <p>Fourth Chart</p>
+          <h3>
+            Mexicans with a high socioeconomic status are lighter-skinned
+          </h3>
+          <p>
+            In addition to perceived socioeconomic status, the MMSI survey
+            classifies dwellings into four strata according to specific
+            socioeconomic characteristics of the people living in them as well
+            as the physical characteristics and equipment of the dwellings based
+            on 24 variables recovered from the census. <br />
+            <br />
+            Mexicans at the highest socioeconomic stratum are whiter than the
+            average Mexican. Furthermore, the bin with the highest mobility,
+            where individuals went from having the lowest perceived
+            socioeconomic level at age 14 to the highest current level had an
+            average skin tone of 9.39 out of 11, where 11 is the lightest
+            possible skin tone.
+          </p>
         </div>
       </article>
       <figure>
@@ -90,24 +126,38 @@
       </figure>
     </section>
     <section id="explore">
-      <div id="text-explore"><h2>Now you explore</h2></div>
-      <div id="dropdown-container">
-        <div id="options">
-          <p class="bold">Filter by:</p>
-          <p>Highest Degree Achieved</p>
-          <div class="dropdown"></div>
-          <!-- <select id="dropdown">
-            <option value="first">First</option>
-            <option value="second">Second</option>
-            <option value="third">Third</option>
-            <option value="forth">Fourth</option>
-          </select> -->
+      <div id="text-explore">
+        <h2>
+          Now, you explore how mobility changes for different variables by skin
+          tone!
+        </h2>
+      </div>
+      <div class="dropdown-container">
+        <div id="schooling" class="options">
+          <p>Schooling</p>
+          <div class="dropdown" id="schooling"></div>
         </div>
-        <div class="compare" id="chart1"></div>
+        <div id="agegroup" class="options">
+          <p>Age group</p>
+          <div class="dropdown" id="agegroup"></div>
+        </div>
+        <div id="gender" class="options">
+          <p>Gender</p>
+          <div class="dropdown" id="gender"></div>
+        </div>
+        <div id="race" class="options">
+          <p>Race</p>
+          <div class="dropdown" id="race"></div>
+        </div>
+        <div id="sociostatus" class="options">
+          <p>Socioeconomic status<sup>/1</sup></p>
+          <div class="dropdown" id="sociostatus"></div>
+        </div>
       </div>
       <!--       <figure class="compare">
         <div class="compare" , id="chart2"></div>
       </figure> -->
+      <div class="compare" id="chart1"></div>
     </section>
     <script src="bundle.js"></script>
   </body>

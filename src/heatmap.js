@@ -1,14 +1,23 @@
 import * as d3 from "d3";
-//import transition from "d3-transition";
-//import d3Tip from "d3-tip";
-//import { annotation } from "d3-svg-annotation";
-//import * as d3Annotation from "d3-svg-annotation";
+import {
+  annotation,
+  annotationLabel,
+  annotationCalloutCircle
+} from "d3-svg-annotation";
 import * as u from "./utils";
 //import "./transition-polyfill";
+//import transition from "d3-transition";
+//import d3Tip from "d3-tip";
 
 //reduceData(data, replaceVals, currentOption, specFilter)
 
-export default function heatMap(data, currentOption, specFilter, selectId) {
+export default function heatMap(
+  data,
+  currentOption,
+  specFilter,
+  selectId,
+  response
+) {
   //console.log(response.index);
   /* container dimensions */
   const containerStart = d3
@@ -29,27 +38,6 @@ export default function heatMap(data, currentOption, specFilter, selectId) {
     currentOption,
     specFilter
   );
-
-  /*   const annotations = [
-    {
-      note: {
-        label:
-          "Basic settings with subject position(x,y) and a note offset(dx, dy)",
-        title: "d3.annotationLabel"
-      },
-      x: 50,
-      y: 150,
-      dy: 137,
-      dx: 162
-    }
-  ].map(function(d) {
-    d.color = "#E8336D";
-    return d;
-  });
-  const makeAnnotations = d3
-    .annotation()
-    .type(d3.annotationLabel)
-    .annotations(annotations); */
 
   /* x scale */
   var xScale = d3
@@ -113,7 +101,7 @@ export default function heatMap(data, currentOption, specFilter, selectId) {
       .style("top", parseInt(d3.select(this).attr("y")) - 40 + "px");
     d3.select(this)
       .style("stroke", "purple")
-      .style("stroke-width", 2)
+      .style("stroke-width", 3)
       .style("opacity", 1);
   };
 
@@ -184,7 +172,17 @@ export default function heatMap(data, currentOption, specFilter, selectId) {
     .ease(d3.easeLinear)
     .attr("stroke-dashoffset", 0);
 
-  /* heatmap */
+  /* annotations */
+  const annotations = chooseAnnotation(response);
+  //console.log(annotations[0].note.label);
+
+  // make annotations function
+  window.makeAnnotations = annotation()
+    .annotations(annotations)
+    .type(annotationLabel);
+  /*     .editMode(true); */
+
+  /* heatmap enter, update, exit cycle */
   // update even if rectangles don't exist
   var update = svg
     .select("#plotArea")
@@ -210,10 +208,10 @@ export default function heatMap(data, currentOption, specFilter, selectId) {
     .on("mouseover", mouseover)
     .on("mouseout", mouseleave);
 
-  /*   d3.select("svg")
+  var currentAnnotation = svg
     .append("g")
     .attr("class", "annotation-group")
-    .call(makeAnnotations); */
+    .call(window.makeAnnotations);
 
   var exit = update.exit();
 
@@ -239,6 +237,11 @@ export default function heatMap(data, currentOption, specFilter, selectId) {
     .attr("width", 0)
     .attr("height", 0)
     .remove();
+
+  currentAnnotation
+    .transition()
+    .duration(4500)
+    .style("opacity", 0);
 }
 
 /* labels */
@@ -301,3 +304,125 @@ var socioLabelsSteps = [
   "10 - Highest",
   "11"
 ];
+
+function chooseAnnotation(response) {
+  if (response.index === 0) {
+    return [
+      {
+        //below in makeAnnotations has type set to d3.annotationLabel
+        //you can add this type value below to override that default
+        type: annotationLabel,
+        note: {
+          label:
+            "Bins with a higher perceived socioeconomic status than at age 14",
+          title: "Direction of Highest Upward Mobility",
+          wrap: 190
+        },
+        //settings for the subject, in this case the circle radius
+        connector: {
+          end: "arrow"
+        },
+        x: 188,
+        y: 31,
+        dy: 111,
+        dx: 113
+      },
+      {
+        //below in makeAnnotations has type set to d3.annotationLabel
+        //you can add this type value below to override that default
+        type: annotationLabel,
+        note: {
+          label:
+            "Bins with a lower perceived socioeconomic status than at age 14",
+          title: "Direction of Highest Downward Mobility",
+          wrap: 190
+        },
+        //settings for the subject, in this case the circle radius
+        connector: {
+          end: "arrow"
+        },
+        x: 704,
+        y: 554,
+        dy: -119,
+        dx: -112
+      }
+    ].map(function(d) {
+      d.color = "black";
+      return d;
+    });
+  } else if (response.index === 1) {
+    return [
+      {
+        //below in makeAnnotations has type set to d3.annotationLabel
+        //you can add this type value below to override that default
+        type: annotationCalloutCircle,
+        note: {
+          label:
+            "Women on the upper side of the graph experienced higher social mobility or reduced downward social mobility",
+          title: "Better social mobility outcomes",
+          wrap: 190
+        },
+        //settings for the subject, in this case the circle radius
+        subject: {
+          radius: 140
+        },
+        x: 416,
+        y: 146,
+        dx: 0,
+        dy: 232
+      }
+    ].map(function(d) {
+      d.color = "black";
+      return d;
+    });
+  } else if (response.index === 2) {
+    return [
+      {
+        //below in makeAnnotations has type set to d3.annotationLabel
+        //you can add this type value below to override that default
+        type: annotationCalloutCircle,
+        note: {
+          label: "There are empty buckets at the highest levels of mobility",
+          title: "No high upward mobility",
+          wrap: 180
+        },
+        //settings for the subject, in this case the circle radius
+        subject: {
+          radius: 90
+        },
+        x: 245,
+        y: 97,
+        dx: 114,
+        dy: 6
+      }
+    ].map(function(d) {
+      d.color = "black";
+      return d;
+    });
+  } else if (response.index === 3) {
+    return [
+      {
+        //below in makeAnnotations has type set to d3.annotationLabel
+        //you can add this type value below to override that default
+        type: annotationLabel,
+        note: {
+          label: "(if you are lighter-skinned)",
+          title: "Highest mobility",
+          wrap: 180
+        },
+        connector: {
+          end: "dot"
+        },
+        x: 180,
+        y: 33,
+        dx: 81,
+        dy: 41
+      }
+    ].map(function(d) {
+      d.color = "black";
+      return d;
+    });
+  } else {
+    return [];
+  }
+}

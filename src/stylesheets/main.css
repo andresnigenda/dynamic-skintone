@@ -47,7 +47,7 @@ figure {
 
 .step {
   margin: 0 auto 2rem auto;
-  background-color: #eeeded;
+  background-color: whitesmoke;
   color: #fff;
 }
 
@@ -56,7 +56,7 @@ figure {
 }
 
 .step.is-active {
-  background-color: lightgray;
+  background-color: white;
   color: #3b3b3b;
 }
 
@@ -132,28 +132,42 @@ div.compare {
   position: relative;
   height: 600px;
   width: 600px;
-  margin-top: 50px;
-  left: 40%;
+  margin-top: 80px;
+  left: 25%;
 }
 
-div #options {
-  position: relative;
-  left: 20%;
+div.options {
+  /*   position: relative;
+  left: 20%; */
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
   height: 10px;
   width: 200px;
 }
 
-div #options p {
-  width: 200px;
+div.options p {
+  width: 150px;
   height: 5px;
-  font-size: 1rem;
+  font-size: 0.8rem;
 }
 p.bold {
   font-weight: bold;
 }
 
-select .dropdown {
-  width: 200px;
+/* select .dropdown {
+  width: 150px;
+} */
+
+select {
+  width: 140px;
+}
+
+div.dropdown-container {
+  display: flex;
+  justify-content: center;
+  flex-direction: row;
+  margin-top: 40px;
 }
 
 /* .d3-tip:after {

@@ -50,10 +50,9 @@ function handleResize() {
   // 4. tell scrollama to update new element dimensions
   scroller.resize();
 }
-
 // scrollama event handlers
 function handleStepEnter(response) {
-  console.log(response);
+  //console.log(response);
   //console.log(dataContainer.mainData);
   // response = { element, direction, index }
 
@@ -63,18 +62,32 @@ function handleStepEnter(response) {
   });
 
   // update graphic based on step
-  // d.P1_1 === "2" - women
-  // d.est_socio_ENH === "1" - bajo
-  /* heatMap(data, currentOption, specFilter, selectId) */
-
   if (response.index === 0) {
-    heatMap(dataContainer.mainData, "", d => d, ".chart"); // all
+    heatMap(dataContainer.mainData, "", d => d, ".chart", response); // all
   } else if (response.index === 1) {
-    heatMap(dataContainer.mainData, "", d => d.P1_1 === "2", ".chart"); // women
+    heatMap(
+      dataContainer.mainData,
+      "",
+      d => d.P1_1 === "2", // women
+      ".chart",
+      response
+    ); // women
   } else if (response.index === 2) {
-    heatMap(dataContainer.mainData, "", d => d.TamLoc_Ag1 === "1", ".chart"); // rural
+    heatMap(
+      dataContainer.mainData,
+      "",
+      d => d.P10_3 === "1", // black
+      ".chart",
+      response
+    ); // rural
   } else if (response.index === 3) {
-    heatMap(dataContainer.mainData, "", d => d.NivEsc_Inf === "7", ".chart"); // college or more
+    heatMap(
+      dataContainer.mainData,
+      "",
+      d => d.est_socio_ENH === "4", // high socioeconomic
+      ".chart",
+      response
+    ); // college or more
   }
   handleResize();
 }
@@ -128,41 +141,38 @@ Promise.all([d3.csv("./data/MMSI_2016.csv")])
      */
     // initial map
     startsvgC("#chart1");
-    heatMap(dataContainer.mainData, "", d => d, ".compare");
+    heatMap(dataContainer.mainData, "", d => d, ".compare", NaN);
     // schooling dropdown
-    var schoolDropDown = d3
-      .select(".dropdown")
-      .append("select")
-      .attr("id", "schoolDropdown");
-
-    var schoolOptions = schoolDropDown
-      .selectAll("option")
-      .data(educData)
-      .enter()
-      .append("option");
-
-    schoolOptions
-      .text(function(d) {
-        return d.text;
-      })
-      .attr("value", function(d) {
-        return d.value;
-      });
-
+    var schoolDropDown = setDropDown(
+      "#schooling",
+      "schoolDropdown",
+      schoolData
+    );
     schoolDropDown.on("change", menuChanged);
-    //raceDropDown.on("change")
 
-    function menuChanged() {
-      var selectedValue = d3.event.target.value;
-      console.log(selectedValue);
-      console.log(d3.event.target.id);
-      heatMap(
-        dataContainer.mainData,
-        selectedValue,
-        d => d.NivEsc_Inf === selectedValue,
-        ".compare"
-      );
-    }
+    // mother's education
+    var agegroupDropDown = setDropDown(
+      "#agegroup",
+      "agegroupDropdown",
+      agegroupData
+    );
+    agegroupDropDown.on("change", menuChanged);
+
+    // race dropdown
+    var raceDropDown = setDropDown("#race", "raceDropdown", raceData);
+    raceDropDown.on("change", menuChanged);
+
+    // gender
+    var genderDropDown = setDropDown("#gender", "genderDropdown", genderData);
+    genderDropDown.on("change", menuChanged);
+
+    // census sociostatus
+    var sociostatusDropDown = setDropDown(
+      "#sociostatus",
+      "sociostatusDropdown",
+      sociostatusData
+    );
+    sociostatusDropDown.on("change", menuChanged);
   })
   .catch(error => {
     console.log(error);
@@ -170,7 +180,77 @@ Promise.all([d3.csv("./data/MMSI_2016.csv")])
 
 // add listener
 
-var educData = [
+function menuChanged() {
+  var selectedValue = d3.event.target.value;
+  //console.log(selectedValue);
+  var dropdownType = d3.event.target.id;
+  if (dropdownType === "schoolDropdown") {
+    heatMap(
+      dataContainer.mainData,
+      selectedValue,
+      d => d.NivEsc_Inf === selectedValue,
+      ".compare",
+      NaN
+    );
+  } else if (dropdownType === "raceDropdown") {
+    heatMap(
+      dataContainer.mainData,
+      selectedValue,
+      d => d.P10_3 === selectedValue,
+      ".compare",
+      NaN
+    );
+  } else if (dropdownType === "genderDropdown") {
+    heatMap(
+      dataContainer.mainData,
+      selectedValue,
+      d => d.P1_1 === selectedValue,
+      ".compare",
+      NaN
+    );
+  } else if (dropdownType === "sociostatusDropdown") {
+    heatMap(
+      dataContainer.mainData,
+      selectedValue,
+      d => d.est_socio_ENH === selectedValue,
+      ".compare",
+      NaN
+    );
+  } else if (dropdownType === "agegroupDropdown") {
+    heatMap(
+      dataContainer.mainData,
+      selectedValue,
+      d => d.Edad_Ag2 === selectedValue,
+      ".compare",
+      NaN
+    );
+  }
+}
+
+function setDropDown(myClass, myId, optionsData) {
+  // race dropdown
+  var dropDown = d3
+    .select(myClass)
+    .append("select")
+    .attr("id", myId);
+
+  var options = dropDown
+    .selectAll("option")
+    .data(optionsData)
+    .enter()
+    .append("option");
+
+  options
+    .text(function(d) {
+      return d.text;
+    })
+    .attr("value", function(d) {
+      return d.value;
+    });
+  return dropDown;
+}
+
+var schoolData = [
   { value: "all", text: "All" },
   { value: "1", text: "No Schooling" },
   { value: "2", text: "Incomplete Primary" },
@@ -181,6 +261,14 @@ var educData = [
   { value: "7", text: "College or Higher" }
 ];
 
+var agegroupData = [
+  { value: "all", text: "All" },
+  { value: "1", text: "25 to 34 yrs" },
+  { value: "2", text: "35 to 44 yrs" },
+  { value: "3", text: "45 to 54 yrs" },
+  { value: "4", text: "55 to 64 yrs" }
+];
+
 var raceData = [
   { value: "all", text: "All" },
   { value: "1", text: "Black / Black-Mixed" },
@@ -189,4 +277,28 @@ var raceData = [
   { value: "4", text: "White" },
   { value: "5", text: "Other" },
   { value: "9", text: "Doesn't know" }
+];
+
+var raceData = [
+  { value: "all", text: "All" },
+  { value: "1", text: "Black / Black-Mixed" },
+  { value: "2", text: "Indigenous" },
+  { value: "3", text: "Mixed" },
+  { value: "4", text: "White" },
+  { value: "5", text: "Other" },
+  { value: "9", text: "Doesn't know" }
+];
+
+var genderData = [
+  { value: "all", text: "All" },
+  { value: "1", text: "Male" },
+  { value: "2", text: "Female" }
+];
+
+var sociostatusData = [
+  { value: "all", text: "All" },
+  { value: "1", text: "Low" },
+  { value: "2", text: "Medium low" },
+  { value: "3", text: "Medium high" },
+  { value: "4", text: "High" }
 ];
