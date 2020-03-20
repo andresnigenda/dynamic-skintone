@@ -1,6 +1,10 @@
 * {
   font-family: arial, sans-serif;
 }
+sup {
+  line-height: 0;
+  font-size: 75%;
+}
 
 #scrolly {
   position: relative;
@@ -75,6 +79,7 @@ h1 {
 
 h2 {
   text-align: left;
+  padding: 1rem;
   opacity: 1;
   font-size: 1.8rem;
 }
@@ -125,6 +130,31 @@ h3 {
   justify-content: center;
   align-items: center;
   flex-direction: column;
+  color: #000000;
+  font-size: 12px;
+}
+
+#legendTitle {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  margin-right: 355px;
+  margin-top: 50px;
+  margin-bottom: 1px;
+  font-size: 12px;
+  padding-bottom: 0px;
+  color: #000000;
+}
+#legend2 {
+  margin-right: 120px;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 1px;
+  margin-bottom: 1px;
+  font-size: 10px;
+  color: #000000;
 }
 
 #scrolldown {
@@ -154,7 +184,7 @@ div.compare {
   position: relative;
   height: 600px;
   width: 600px;
-  margin-top: 80px;
+  margin-top: 5px;
   left: 25%;
 }
 
@@ -193,7 +223,7 @@ div.dropdown-container {
 }
 
 section#outro {
-  margin-top: 200px;
+  margin-top: 5px;
   margin-bottom: 50px;
 }
 

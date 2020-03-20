@@ -252,7 +252,7 @@ export default function heatMap(
     // transition out currentAnnotation
     currentAnnotation
       .transition()
-      .duration(10000)
+      .duration(12000)
       .style("opacity", 0);
   }
 }

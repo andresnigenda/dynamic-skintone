@@ -80,19 +80,21 @@
       <p>
         This project explores different dimensions of social mobility for
         Mexicans aged 25 to 64 in 2016 using data from Mexico's National
-        Institute of Statistics and Geography (INEGI). The 2016 Module on
+        Institute of Statistics and Geography (INEGI). INEGI's 2016 Module on
         Intergenerational Social Mobility (MMSI)<a href="#2"><sup>/2</sup></a>
-        lets us compare an individual's perceived current socioeconomic status
-        with their perceived status at age 14. Although in this context,
+        lets us compare an individual's perception of their current
+        socioeconomic status with that at age 14. Although in this context,
         socioeconomic status is a subjective measure of an individual's economic
-        and social position in regard to others, it provides with the unique
+        and social position in regard to others, it provides the unique
         opportunity to investigate whether Mexicans face significant barriers to
         social mobility given their skin color.
       </p>
       <p>
         The MMSI also provides information on self-perceived skin color using
-        Princeton's PERLA scale, which allows to assign skin color according to
-        an eleven color palette.<a href="#3"><sup>/3</sup></a
+        Princeton's Project on Ethnicity and Race in Latin America (PERLA)
+        scale, which assigns skin color according to an eleven color palette.<a
+          href="#3"
+          ><sup>/3</sup></a
         >All of the visualizations in this project follow this scale, where a
         value of 1 corresponds to the darkest skin color, and a value of 11 to
         the lightest skin color as follows:
@@ -102,14 +104,16 @@
         This scrollytelling explores social mobility by skin color through
         social mobility matrices. On each matrix, a square represents a bucket
         of mobility in which people perceive themselves to have a certain
-        socioeconomic level given their perceived socioeconomic level when they
-        were 14 years old. Each bucket is colored with the average skin color of
-        people that land on it.<a href="#4"><sup>/4</sup></a> The upper diagonal
-        of a matrix represents buckets with upward social mobility whereas the
-        diagonal (under the purple steps) represents buckets with static or
-        downward social mobility. Hover over each bucket to reveal a tooltip
-        with bucket-specific information on the average skin tone, the total
-        population and the population as a proportion of all buckets.
+        socioeconomic level given their level at age 14. Each bucket is colored
+        with the average skin color of the people that land on it.<a href="#4"
+          ><sup>/4</sup></a
+        >
+        The upper diagonal of a matrix represents buckets with upward social
+        mobility whereas the lower diagonal (under the purple steps) represents
+        buckets with static or downward social mobility. Hover over each bucket
+        to reveal a tooltip with bucket-specific information on the average skin
+        tone, the total population and the population as a proportion of all
+        buckets.
       </p>
       <p>
         For example, in 2016, 0.11% of all Mexicans perceived themselves to be
@@ -153,7 +157,7 @@
           <h2>Mexican Women</h2>
           <h3>
             Social mobility for darker-skinned women is lower than for their
-            darker-skinned peers
+            lighter-skinned peers
           </h3>
           <p>
             The overwhelming majority of higher upward mobility and lower
@@ -172,25 +176,24 @@
           </h3>
           <p>
             According to the latest inter-census survey, 1.2% of Mexico's
-            population identifies as afro-descendants. Given the previous
-            patterns that we have observed, it is not surprising to see that
-            even among Afromexicans, lighter-skinned Afromexicans have better
-            mobility outcomes than darker-skinned ones. Even worse, there are
-            gaps in the higher upward mobility and lower income mobility
+            population identifies as afro-descendants.<sup>/5</sup> <br />
+            <br />
+            Given the previous patterns that we have observed, it is not
+            surprising to see that even among Afromexicans, lighter-skinned
+            Afromexicans have better mobility outcomes than darker-skinned ones.
+            Even worse, there are noticeable gaps in the higher upward mobility
             buckets.
           </p>
         </div>
         <div class="step" data-step="4">
           <h2>Rich Mexicans</h2>
           <h3>
-            Mexicans with a high socioeconomic status are lighter-skinned
+            Mexicans with the highest socioeconomic status are lighter-skinned
           </h3>
           <p>
             In addition to perceived socioeconomic status, the MMSI survey
-            classifies dwellings into four strata according to specific
-            socioeconomic characteristics of the people living in them as well
-            as the physical characteristics and equipment of the dwellings based
-            on 24 variables recovered from the census. <br />
+            classifies dwellings into four strata according to specific census
+            characteristics.<br />
             <br />
             Mexicans at the highest socioeconomic stratum are whiter than the
             average Mexican. Notice how the bin with the highest mobility in
@@ -231,10 +234,12 @@
           <div class="dropdown" id="race"></div>
         </div>
         <div id="sociostatus" class="options">
-          <p>Socioeconomic status<sup>/5</sup></p>
+          <p>Socioeconomic status<sup>/6</sup></p>
           <div class="dropdown" id="sociostatus"></div>
         </div>
       </div>
+      <p id="legendTitle">Skin color palette</p>
+      <div id="legend2"></div>
       <!--       <figure class="compare">
         <div class="compare" , id="chart2"></div>
       </figure> -->
@@ -262,11 +267,19 @@
         >
       </p>
       <p id="4">/4 The average is rounded up or down at two decimals</p>
-      <p>/5 According to the census stratification</p>
+      <p>
+        /5 See:
+        <a
+          href="https://www.gob.mx/cms/uploads/attachment/file/199489/Datos_INEGI_poblacio_n_afromexicana.pdf"
+          >https://www.gob.mx/cms/uploads/attachment/file/199489/Datos_INEGI_poblacio_n_afromexicana.pdf</a
+        >
+      </p>
+      <p>/6 According to the census stratification</p>
       <h2>Acknowledgements</h2>
       <p>
-        I appreciate the constant feedback, coding help and comments throughout
-        this project from Andrew McNutt, Tammy Glazer and Bernard Dickens.
+        I appreciate Andrew McNutt's wise feedback and coding help throughout
+        this project, as well as Bernard Dickens and Tammy Glazer's insightful
+        comments.
       </p>
     </section>
     <script src="bundle.js"></script>

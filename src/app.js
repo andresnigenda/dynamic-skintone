@@ -34,46 +34,50 @@ var myColor = d3
     "#faebee"
   ]);
 
-var size = 40;
+// #legend"
 
-var legendSVG = d3
-  .select("#legend")
-  .append("svg")
-  .attr("width", size * 11);
+setupLegend("#legend", 40, 330, 55, myColor, keys);
+setupLegend("#legend2", 30, 50, 40, myColor, keys);
 
-legendSVG
-  .selectAll(".legend")
-  .data(keys)
-  .enter()
-  .append("rect")
-  .attr("x", function(d, i) {
-    return i * size;
-  })
-  .attr("width", size)
-  .attr("height", size)
-  .style("fill", function(d) {
-    return myColor(d);
-  });
+function setupLegend(tagId, size, height, heightY, colors, keys) {
+  var legendSVG = d3
+    .select(tagId)
+    .append("svg")
+    .attr("width", size * 11)
+    .attr("height", height);
 
-legendSVG
-  .selectAll(".labels")
-  .data(keys)
-  .enter()
-  .append("text")
-  .attr("y", 55)
-  .attr("x", function(d, i) {
-    return size * 0.4 + i * size;
-  })
-  .attr("width", size)
-  .attr("height", size)
-  .style("fill", function(d) {
-    return myColor(d);
-  })
-  .text(function(d) {
-    return d;
-  })
-  .attr("text-anchor", "left")
-  .style("alignment-baseline", "middle");
+  legendSVG
+    .selectAll(".legend")
+    .data(keys)
+    .enter()
+    .append("rect")
+    .attr("x", function(d, i) {
+      return i * size;
+    })
+    .attr("width", size)
+    .attr("height", size)
+    .style("fill", function(d) {
+      return colors(d);
+    });
+
+  legendSVG
+    .selectAll(".labels")
+    .data(keys)
+    .enter()
+    .append("text")
+    .attr("y", heightY)
+    .attr("x", function(d, i) {
+      return size * 0.4 + i * size;
+    })
+    .attr("width", size)
+    .attr("height", size)
+    .style("fill", "black")
+    .text(function(d) {
+      return d;
+    })
+    .attr("text-anchor", "left")
+    .style("alignment-baseline", "middle");
+}
 
 /**
  * Scrolly section
