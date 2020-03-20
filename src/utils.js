@@ -1,5 +1,5 @@
 // helper functions
-
+import * as d3 from "d3";
 function filterFunc(data, currentOption, specFilter) {
   return currentOption === "all" ? data : data.filter(specFilter);
 }
@@ -65,7 +65,7 @@ export function reduceData(data, replaceVals, currentOption, specFilter) {
     element.prop =
       parseFloat((element.Factor_Per / totalPop) * 100).toFixed(2) + "%";
   });
-  console.log(result);
+  //console.log(result);
   return result;
 }
 

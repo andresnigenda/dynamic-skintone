@@ -10,6 +10,7 @@ import * as u from "./utils";
 //import d3Tip from "d3-tip";
 
 //reduceData(data, replaceVals, currentOption, specFilter)
+var idx = 0;
 
 export default function heatMap(
   data,
@@ -68,7 +69,6 @@ export default function heatMap(
       "#f0d1ce",
       "#faebee"
     ]);
-
   /* tooltip */
   // https://stackoverflow.com/questions/16256454/d3-js-position-tooltips-using-element-position-not-mouse-position
   // https://bl.ocks.org/philipcdavis/6035183e3508e3c2e8de
@@ -182,6 +182,21 @@ export default function heatMap(
     .type(annotationLabel);
   /*     .editMode(true); */
 
+  // add listener to steps
+  /*   var activeStep = d3
+    .select("#scrolly")
+    .select("article")
+    .selectAll(".step.is-active");
+
+  console.log(activeStep.classed("is-active")); */
+  console.log(response);
+  if (response.direction === "down") {
+    var currentAnnotation = svg
+      .append("g")
+      .attr("class", "annotation-group")
+      .call(window.makeAnnotations);
+  }
+
   /* heatmap enter, update, exit cycle */
   // update even if rectangles don't exist
   var update = svg
@@ -208,11 +223,6 @@ export default function heatMap(
     .on("mouseover", mouseover)
     .on("mouseout", mouseleave);
 
-  var currentAnnotation = svg
-    .append("g")
-    .attr("class", "annotation-group")
-    .call(window.makeAnnotations);
-
   var exit = update.exit();
 
   // update with transition
@@ -238,10 +248,13 @@ export default function heatMap(
     .attr("height", 0)
     .remove();
 
-  currentAnnotation
-    .transition()
-    .duration(4500)
-    .style("opacity", 0);
+  if (response.direction === "down") {
+    // transition out currentAnnotation
+    currentAnnotation
+      .transition()
+      .duration(10000)
+      .style("opacity", 0);
+  }
 }
 
 /* labels */

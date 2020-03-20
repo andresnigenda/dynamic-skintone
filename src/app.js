@@ -14,6 +14,68 @@ import startsvg from "./startsvg";
 import startsvgC from "./compare";
 
 /**
+ * legend
+ */
+var keys = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
+var myColor = d3
+  .scaleLinear()
+  .domain(keys)
+  .range([
+    "#322d27",
+    "#3d230d",
+    "#4a382e",
+    "#694d3f",
+    "#7e6455",
+    "#96775b",
+    "#b4997e",
+    "#dec198",
+    "#e1b8b2",
+    "#f0d1ce",
+    "#faebee"
+  ]);
+
+var size = 40;
+
+var legendSVG = d3
+  .select("#legend")
+  .append("svg")
+  .attr("width", size * 11);
+
+legendSVG
+  .selectAll(".legend")
+  .data(keys)
+  .enter()
+  .append("rect")
+  .attr("x", function(d, i) {
+    return i * size;
+  })
+  .attr("width", size)
+  .attr("height", size)
+  .style("fill", function(d) {
+    return myColor(d);
+  });
+
+legendSVG
+  .selectAll(".labels")
+  .data(keys)
+  .enter()
+  .append("text")
+  .attr("y", 55)
+  .attr("x", function(d, i) {
+    return size * 0.4 + i * size;
+  })
+  .attr("width", size)
+  .attr("height", size)
+  .style("fill", function(d) {
+    return myColor(d);
+  })
+  .text(function(d) {
+    return d;
+  })
+  .attr("text-anchor", "left")
+  .style("alignment-baseline", "middle");
+
+/**
  * Scrolly section
  */
 
@@ -178,6 +240,7 @@ Promise.all([d3.csv("./data/MMSI_2016.csv")])
     console.log(error);
   });
 
+var elements = document.getElementsByTagName("select");
 // add listener
 
 function menuChanged() {

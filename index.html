@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Skin Tone and Social Mobility</title>
+    <title>Skin Color and Social Mobility</title>
     <meta charset="utf-8" />
     <meta
       name="viewport"
@@ -9,36 +9,113 @@
     />
   </head>
   <body>
+    <a
+      href="https://github.com/andresnigenda/dynamic-skintone"
+      class="github-corner"
+      aria-label="View source on GitHub"
+      ><svg
+        width="80"
+        height="80"
+        viewBox="0 0 250 250"
+        style="fill:#151513; color:#fff; position: absolute; top: 0; border: 0; right: 0;"
+        aria-hidden="true"
+      >
+        <path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path>
+        <path
+          d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2"
+          fill="currentColor"
+          style="transform-origin: 130px 106px;"
+          class="octo-arm"
+        ></path>
+        <path
+          d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z"
+          fill="currentColor"
+          class="octo-body"
+        ></path></svg></a
+    ><style>
+      .github-corner:hover .octo-arm {
+        animation: octocat-wave 560ms ease-in-out;
+      }
+      @keyframes octocat-wave {
+        0%,
+        100% {
+          transform: rotate(0);
+        }
+        20%,
+        60% {
+          transform: rotate(-25deg);
+        }
+        40%,
+        80% {
+          transform: rotate(10deg);
+        }
+      }
+      @media (max-width: 500px) {
+        .github-corner:hover .octo-arm {
+          animation: none;
+        }
+        .github-corner .octo-arm {
+          animation: octocat-wave 560ms ease-in-out;
+        }
+      }
+    </style>
     <section id="intro">
       <h1>
-        Moving up the ladder? How skin tone determines social mobility in Mexico
+        Moving up the ladder? How skin color influences social mobility in
+        Mexico
       </h1>
+      <p id="name">by Andrés Nigenda</p>
       <p>
-        In Mexico, there is persistent social stratification by skin color.
+        In Mexico, there is pervasive social stratification by skin color.
         Lightest-skinned Mexicans have, on average, 1.5 additional years of
-        schooling and earn 53% more per hour than their darkest-skinned peers.
-        It is no surprise then, that having a darker skin tone is related to
-        lower upward mobility in Mexico. However, these inequities are
-        accentuated for some and attenuated for others according to their
-        sociodemographic characteristics.
+        schooling and earn 53% more per hour than their darkest-skinned peers.<a
+          href="#1"
+          ><sup>/1</sup></a
+        >
+        This stratification is also persistent over time: social mobility for
+        darker skinned Mexicans is reduced when compared to their lighter
+        skinned peers. These inequities are accentuated for some and attenuated
+        for others given other sociodemographic characteristics.
       </p>
       <p>
-        This project explores the different dimensions and breakdowns of social
-        mobility for Mexicans aged 25 to 64 in 2016 using data from Mexico's
-        National Institute of Statistics and Geography (INEGI). The 2016 Module
-        on Intergenerational Social Mobility (MMSI) lets us map the perceived
-        socioeconomic status of individuals at age 14 and compare it to their
-        current perceived status. The MMSI also provides information on the
-        perceived skin color using the PERLA scale, which assigns skin color
-        according to a palette with eleven skin tones.
+        This project explores different dimensions of social mobility for
+        Mexicans aged 25 to 64 in 2016 using data from Mexico's National
+        Institute of Statistics and Geography (INEGI). The 2016 Module on
+        Intergenerational Social Mobility (MMSI)<a href="#2"><sup>/2</sup></a>
+        lets us compare an individual's perceived current socioeconomic status
+        with their perceived status at age 14. Although in this context,
+        socioeconomic status is a subjective measure of an individual's economic
+        and social position in regard to others, it provides with the unique
+        opportunity to investigate whether Mexicans face significant barriers to
+        social mobility given their skin color.
       </p>
       <p>
-        Each bucket on the matrix is colored according to the average skin color
-        of the population it represents. For example, in 2016, 0.11% of Mexicans
-        perceived themselves to be at the highest socioeconomic status when they
-        were at the lowest at age 14, and the average skin tone of this subset
-        of the population was 7.79, which corresponds to color number 8 on the
-        PERLA scale.
+        The MMSI also provides information on self-perceived skin color using
+        Princeton's PERLA scale, which allows to assign skin color according to
+        an eleven color palette.<a href="#3"><sup>/3</sup></a
+        >All of the visualizations in this project follow this scale, where a
+        value of 1 corresponds to the darkest skin color, and a value of 11 to
+        the lightest skin color as follows:
+      </p>
+      <div id="legend"></div>
+      <p>
+        This scrollytelling explores social mobility by skin color through
+        social mobility matrices. On each matrix, a square represents a bucket
+        of mobility in which people perceive themselves to have a certain
+        socioeconomic level given their perceived socioeconomic level when they
+        were 14 years old. Each bucket is colored with the average skin color of
+        people that land on it.<a href="#4"><sup>/4</sup></a> The upper diagonal
+        of a matrix represents buckets with upward social mobility whereas the
+        diagonal (under the purple steps) represents buckets with static or
+        downward social mobility. Hover over each bucket to reveal a tooltip
+        with bucket-specific information on the average skin tone, the total
+        population and the population as a proportion of all buckets.
+      </p>
+      <p>
+        For example, in 2016, 0.11% of all Mexicans perceived themselves to be
+        at the highest socioeconomic level possible given that they were at the
+        lowest one at age 14. The average skin color of this subset of the
+        population was 7.79, which corresponds to color number 8 on the palette.
       </p>
       <p id="scrolldown">Scroll Down to Explore</p>
       <div class="svg-container">
@@ -58,37 +135,40 @@
     <section id="scrolly">
       <article>
         <div class="step" data-step="1">
+          <h2>All Mexicans</h2>
           <h3>
-            The lighter your skin tone, the more likely you are to be better
-            off, or at least not worse off than when you were 14 y.o.
+            The lighter your skin color, the more likely you are to be better
+            off, or at least not worse off than when you were 14 years old
           </h3>
           <p>
             If we look at all Mexicans aged 25 to 64, we can notice two things.
-            First, the bucket with highest economic mobility has a lighter
-            average skin tone than the bucket with the highest downward
+            First, the bucket with the highest socioeconomic mobility has a
+            lighter average skin color than the bucket with the highest downward
             mobility. Second, buckets in the upper part of the matrix (buckets
             with higher upward mobility and lower downward mobility) have a skin
-            tone that is, on average, lighter than the ones on the bottom half.
+            color that is, on average, lighter than the ones on the bottom half.
           </p>
         </div>
         <div class="step" data-step="2">
+          <h2>Mexican Women</h2>
           <h3>
             Social mobility for darker-skinned women is lower than for their
             darker-skinned peers
           </h3>
           <p>
-            For women, the overwhelming majority of higher upward mobility and
-            lower downward mobility buckets are lighter skinned on average. That
-            is, if you are a Mexican woman that was born with a darker skin
-            tone, not only are you more likely to not go up the ladder of social
+            The overwhelming majority of higher upward mobility and lower
+            downward mobility buckets are lighter skinned on average. That is,
+            if you are a Mexican woman that was born with a darker skin color,
+            not only are you more likely to not go up the ladder of social
             mobility when compared to your lighter-skinned peers, but you are
             also more likely to have a lower socioeconomic level, and stay
             there.
           </p>
         </div>
         <div class="step" data-step="3">
+          <h2>Afromexicans</h2>
           <h3>
-            Afromexicans have an even more reduced spectrum of upward mobility
+            Afromexicans have a very reduced spectrum of upward mobility
           </h3>
           <p>
             According to the latest inter-census survey, 1.2% of Mexico's
@@ -101,6 +181,7 @@
           </p>
         </div>
         <div class="step" data-step="4">
+          <h2>Rich Mexicans</h2>
           <h3>
             Mexicans with a high socioeconomic status are lighter-skinned
           </h3>
@@ -112,11 +193,11 @@
             on 24 variables recovered from the census. <br />
             <br />
             Mexicans at the highest socioeconomic stratum are whiter than the
-            average Mexican. Furthermore, the bin with the highest mobility,
-            where individuals went from having the lowest perceived
-            socioeconomic level at age 14 to the highest current level had an
-            average skin tone of 9.39 out of 11, where 11 is the lightest
-            possible skin tone.
+            average Mexican. Notice how the bin with the highest mobility in
+            this stratum, where individuals went from having the lowest
+            perceived socioeconomic level at age 14 to the highest current
+            level, had an average skin color of 9.39 out of 11, where 11 is the
+            lightest possible skin color.
           </p>
         </div>
       </article>
@@ -129,7 +210,7 @@
       <div id="text-explore">
         <h2>
           Now, you explore how mobility changes for different variables by skin
-          tone!
+          color!
         </h2>
       </div>
       <div class="dropdown-container">
@@ -150,7 +231,7 @@
           <div class="dropdown" id="race"></div>
         </div>
         <div id="sociostatus" class="options">
-          <p>Socioeconomic status<sup>/1</sup></p>
+          <p>Socioeconomic status<sup>/5</sup></p>
           <div class="dropdown" id="sociostatus"></div>
         </div>
       </div>
@@ -159,6 +240,40 @@
       </figure> -->
       <div class="compare" id="chart1"></div>
     </section>
+    <section id="outro">
+      <h2>Notes</h2>
+      <p id="1">
+        /1 Campos-Vazquez, R.M., Medina-Cortina, E.M. Skin Color and Social
+        Mobility: Evidence From Mexico. Demography 56, 321–343 (2019).
+        <a href="https://doi.org/10.1007/s13524-018-0734-z"
+          >https://doi.org/10.1007/s13524-018-0734-z</a
+        >
+      </p>
+      <p id="2">
+        /2 Available at:
+        <a href="https://perla.princeton.edu/perla-color-palette/"
+          >Project on Ethnicity and Race in Latin America (PERLA)</a
+        >
+      </p>
+      <p id="3">
+        /3 See:
+        <a href="http://en.www.inegi.org.mx/programas/mmsi/2016/"
+          >http://en.www.inegi.org.mx/programas/mmsi/2016/</a
+        >
+      </p>
+      <p id="4">/4 The average is rounded up or down at two decimals</p>
+      <p>/5 According to the census stratification</p>
+      <h2>Acknowledgements</h2>
+      <p>
+        I appreciate the constant feedback, coding help and comments throughout
+        this project from Andrew McNutt, Tammy Glazer and Bernard Dickens.
+      </p>
+    </section>
     <script src="bundle.js"></script>
   </body>
 </html>
+
+<!--/1 https://link.springer.com/article/10.1007%2Fs13524-018-0734-z 
+ /2 https://perla.princeton.edu/perla-color-palette/
+ /3 the average is rounded up or down
+4/ http://en.www.inegi.org.mx/programas/mmsi/2016/-->
