@@ -189,7 +189,7 @@ export default function heatMap(
     .selectAll(".step.is-active");
 
   console.log(activeStep.classed("is-active")); */
-  console.log(response);
+  //console.log(response);
   if (response.direction === "down") {
     var currentAnnotation = svg
       .append("g")
