@@ -4,7 +4,9 @@ This project, for Andrew McNutt's "Data Visualization for Policy Analysis" class
 
 Live version on: https://andresnigenda.github.io/dynamic-skintone/
 
-TODO:
+Disclaimer: this project works best on your desktop/laptop browser
+
+TODOs:
 
 - Adding a more visual sense of distribution on each heatmap
 - Improving tooltip response
